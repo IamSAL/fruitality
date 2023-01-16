@@ -77,21 +77,18 @@ class Player extends SpriteAnimationComponent
         image: await gameRef.images.load('player_spritesheet.png'),
         srcSize: Vector2(29.0, 32.0));
 
-    // TODO down animation
-    _runDownAnimation =
-        spriteSheet.createAnimation(row: 0, stepTime: _animationSpeed, to: 4);
-    // TODO left animation
-    _runLeftAnimation =
-        spriteSheet.createAnimation(row: 1, stepTime: _animationSpeed, to: 4);
-    // TODO up animation
-    _runUpAnimation =
-        spriteSheet.createAnimation(row: 2, stepTime: _animationSpeed, to: 4);
-    // TODO right animation
-    _runRightAnimation =
-        spriteSheet.createAnimation(row: 3, stepTime: _animationSpeed, to: 4);
-    // TODO standing animation
     _standingAnimation =
         spriteSheet.createAnimation(row: 0, stepTime: _animationSpeed, to: 4);
+    _runDownAnimation =
+        spriteSheet.createAnimation(row: 0, stepTime: _animationSpeed, to: 4);
+
+    _runLeftAnimation =
+        spriteSheet.createAnimation(row: 1, stepTime: _animationSpeed, to: 4);
+
+    _runUpAnimation =
+        spriteSheet.createAnimation(row: 2, stepTime: _animationSpeed, to: 4);
+    _runRightAnimation =
+        spriteSheet.createAnimation(row: 3, stepTime: _animationSpeed, to: 4);
   }
 
   bool canPlayerMoveUp() {
@@ -135,7 +132,8 @@ class Player extends SpriteAnimationComponent
 
   @override
   Future<void>? onLoad() async {
-    _loadAnimations().then((_) => {animation = _standingAnimation});
+    await _loadAnimations();
+    animation = _standingAnimation;
     // position = gameRef.size / 2;
     return super.onLoad();
   }
@@ -143,7 +141,6 @@ class Player extends SpriteAnimationComponent
   @override
   void update(double dt) {
     super.update(dt);
-    // checkScreenBounds();
     movePlayer(dt);
   }
 }

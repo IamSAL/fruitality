@@ -22,7 +22,7 @@ class _MainFruitalityPageState extends State<MainFruitalityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green,
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           GameWidget(game: _fruitaLityGame),
