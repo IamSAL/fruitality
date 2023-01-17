@@ -22,18 +22,27 @@ class _MainFruitalityPageState extends State<MainFruitalityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          GameWidget(game: _fruitaLityGame),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: Joypad(onDirectionChanged: onJoypadDirectionChanged),
-            ),
-          )
-        ],
+      backgroundColor: Colors.blueGrey,
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/images/outside_map_bg_lg.png"),
+              fit: BoxFit.cover,
+              repeat: ImageRepeat.repeatX),
+        ),
+        child: Stack(
+          children: [
+            GameWidget(game: _fruitaLityGame),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 40, horizontal: 40),
+                child: Joypad(onDirectionChanged: onJoypadDirectionChanged),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

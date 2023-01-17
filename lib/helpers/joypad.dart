@@ -20,27 +20,27 @@ class JoypadState extends State<Joypad> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 120,
-      width: 120,
+      height: 80,
+      width: 80,
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(60),
+          borderRadius: BorderRadius.circular(40),
         ),
         child: GestureDetector(
           child: Container(
             decoration: BoxDecoration(
-              color: Color.fromARGB(135, 118, 118, 118),
-              borderRadius: BorderRadius.circular(60),
+              color: const Color(0x88ffffff),
+              borderRadius: BorderRadius.circular(40),
             ),
             child: Center(
               child: Transform.translate(
                 offset: delta,
                 child: SizedBox(
-                  height: 60,
-                  width: 60,
+                  height: 40,
+                  width: 40,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(204, 50, 50, 50),
+                      color: const Color(0xccffffff),
                       borderRadius: BorderRadius.circular(30),
                     ),
                   ),

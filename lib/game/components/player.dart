@@ -1,146 +1,105 @@
-import 'package:flame/collisions.dart';
+import 'dart:math';
+
 import 'package:flame/components.dart';
-import 'package:flame/sprite.dart';
+
+import 'package:flame_forge2d/flame_forge2d.dart';
 
 import '../../helpers/direction.dart';
 
-class Player extends SpriteAnimationComponent
-    with HasGameRef, CollisionCallbacks {
+class PlayerBody extends BodyComponent {
   Direction direction = Direction.none;
-  final double _playerSpeed = 300.0;
-  final double _animationSpeed = 0.15;
-  late final SpriteAnimation _runDownAnimation;
-  late final SpriteAnimation _runLeftAnimation;
-  late final SpriteAnimation _runUpAnimation;
-  late final SpriteAnimation _runRightAnimation;
-  late final SpriteAnimation _standingAnimation;
-  Direction _collisionDirection = Direction.none;
-  bool _hasCollided = false;
-  Player()
-      : super(
-          size: Vector2.all(50),
-        ) {
-    add(RectangleHitbox(size: Vector2.all(50)));
+  final double _playerSpeed = 7000;
+  Vector2 position = Vector2(768 / 2, 360 / 2);
+  late Vector2 size;
+
+  PlayerBody({
+    Vector2? position,
+    Vector2? size,
+  }) : size = size ?? Vector2(100, 100);
+
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    priority = 2;
+    renderBody = false;
+    final sprite = Sprite(gameRef.images.fromCache("default_player.png"));
+    add(
+      SpriteComponent(
+        sprite: sprite,
+        size: size,
+        anchor: Anchor.center,
+      ),
+    );
+
+    //add(PlayerSpriteComponent());
+  }
+
+  @override
+  Body createBody() {
+    final shape = CircleShape()..radius = 0;
+
+    final fixtureDef = FixtureDef(
+      shape,
+      userData: this, // To be able to determine object in collision
+      restitution: 0,
+      density: 0,
+      friction: 0,
+    );
+
+    final bodyDef = BodyDef(
+      position: position,
+      angle: (position.x + position.y) / 2 * pi,
+      type: BodyType.dynamic,
+    );
+    return world.createBody(bodyDef)..createFixture(fixtureDef);
   }
 
   void moveUp(double delta) {
-    position.add(Vector2(0, -(delta * _playerSpeed)));
+    body.linearVelocity = Vector2(0, -(delta)) * _playerSpeed;
   }
 
   void moveDown(double delta) {
-    position.add(Vector2(0, delta * _playerSpeed));
+    body.linearVelocity = Vector2(0, delta) * _playerSpeed;
   }
 
   void moveLeft(double delta) {
-    position.add(Vector2(-(delta * _playerSpeed), 0));
+    //body.applyLinearImpulse(Vector2(-(delta ), 0));
+    body.linearVelocity = Vector2(-(delta), 0) * _playerSpeed;
   }
 
   void moveRight(double delta) {
-    position.add(Vector2(delta * _playerSpeed, 0));
+    //body.applyForce(Vector2(delta , 0));
+    body.linearVelocity = Vector2(delta, 0) * _playerSpeed;
   }
 
   void movePlayer(double delta) {
+    if (direction != Direction.none) {
+      print("delta $delta");
+      print("direction $direction");
+    }
     switch (direction) {
       case Direction.up:
-        if (canPlayerMoveUp()) {
-          animation = _runUpAnimation;
-          moveUp(delta);
-        }
+        moveUp(delta);
 
         break;
       case Direction.down:
-        if (canPlayerMoveDown()) {
-          animation = _runDownAnimation;
-          moveDown(delta);
-        }
+        moveDown(delta);
         break;
       case Direction.left:
-        if (canPlayerMoveLeft()) {
-          animation = _runLeftAnimation;
-          moveLeft(delta);
-        }
+        moveLeft(delta);
         break;
       case Direction.right:
-        if (canPlayerMoveRight()) {
-          animation = _runRightAnimation;
-          moveRight(delta);
-        }
+        moveRight(delta);
         break;
       case Direction.none:
-        animation = _standingAnimation;
         break;
     }
-  }
-
-  Future<void> _loadAnimations() async {
-    final spriteSheet = SpriteSheet(
-        image: await gameRef.images.load('player_spritesheet.png'),
-        srcSize: Vector2(29.0, 32.0));
-
-    _standingAnimation =
-        spriteSheet.createAnimation(row: 0, stepTime: _animationSpeed, to: 4);
-    _runDownAnimation =
-        spriteSheet.createAnimation(row: 0, stepTime: _animationSpeed, to: 4);
-
-    _runLeftAnimation =
-        spriteSheet.createAnimation(row: 1, stepTime: _animationSpeed, to: 4);
-
-    _runUpAnimation =
-        spriteSheet.createAnimation(row: 2, stepTime: _animationSpeed, to: 4);
-    _runRightAnimation =
-        spriteSheet.createAnimation(row: 3, stepTime: _animationSpeed, to: 4);
-  }
-
-  bool canPlayerMoveUp() {
-    if (_hasCollided && _collisionDirection == Direction.up) {
-      return false;
-    }
-    return true;
-  }
-
-  bool canPlayerMoveDown() {
-    if (_hasCollided && _collisionDirection == Direction.down) {
-      return false;
-    }
-    return true;
-  }
-
-  bool canPlayerMoveLeft() {
-    if (_hasCollided && _collisionDirection == Direction.left) {
-      return false;
-    }
-    return true;
-  }
-
-  bool canPlayerMoveRight() {
-    if (_hasCollided && _collisionDirection == Direction.right) {
-      return false;
-    }
-    return true;
-  }
-
-  @override
-  void onCollision(Set<Vector2> intersectionPoints, other) {
-    super.onCollision(intersectionPoints, other);
-  }
-
-  @override
-  void onCollisionEnd(PositionComponent other) {
-    _hasCollided = false;
-    super.onCollisionEnd(other);
-  }
-
-  @override
-  Future<void>? onLoad() async {
-    await _loadAnimations();
-    animation = _standingAnimation;
-    // position = gameRef.size / 2;
-    return super.onLoad();
   }
 
   @override
   void update(double dt) {
     super.update(dt);
+
     movePlayer(dt);
   }
 }
