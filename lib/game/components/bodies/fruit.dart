@@ -51,10 +51,10 @@ class NormalFruit extends Fruit<NormalFruitState> {
   NormalFruit({super.position});
 
   final Map<String, Vector2> spriteOptions = {
-    'Fruit_monitor': Vector2(115, 84),
-    'Fruit_phone_center': Vector2(100, 55),
-    'Fruit_terminal': Vector2(110, 83),
-    'Fruit_laptop': Vector2(100, 63),
+    'fruit_monitor': Vector2(115, 84),
+    'fruit_phone_center': Vector2(100, 55),
+    'fruit_terminal': Vector2(110, 83),
+    'fruit_laptop': Vector2(100, 63),
   };
 
   @override
@@ -85,9 +85,9 @@ class BrokenFruit extends Fruit<BrokenFruitState> {
 
     sprites = <BrokenFruitState, Sprite>{
       BrokenFruitState.cracked:
-          await gameRef.loadSprite('game/platform_cracked_monitor.png'),
+          await gameRef.loadSprite('game/fruit_cracked_monitor.png'),
       BrokenFruitState.broken:
-          await gameRef.loadSprite('game/platform_monitor_broken.png'),
+          await gameRef.loadSprite('game/fruit_monitor_broken.png'),
     };
 
     current = BrokenFruitState.cracked;
@@ -112,9 +112,8 @@ class SpringBoard extends Fruit<SpringState> {
 
     sprites = <SpringState, Sprite>{
       SpringState.down:
-          await gameRef.loadSprite('game/platform_trampoline_down.png'),
-      SpringState.up:
-          await gameRef.loadSprite('game/platform_trampoline_up.png'),
+          await gameRef.loadSprite('game/fruit_trampoline_down.png'),
+      SpringState.up: await gameRef.loadSprite('game/fruit_trampoline_up.png'),
     };
 
     current = SpringState.up;

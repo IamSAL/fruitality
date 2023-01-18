@@ -2,9 +2,9 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:fruitality/game/fruitality_game.dart';
 
-class GameStart extends StatelessWidget {
+class GameStartMenuOverlay extends StatelessWidget {
   FruitaLityGame game;
-  GameStart({Key? key, required this.game}) : super(key: key);
+  GameStartMenuOverlay({Key? key, required this.game}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +12,11 @@ class GameStart extends StatelessWidget {
       child: Column(
         children: [
           Text("Starts overlay"),
-          ElevatedButton(onPressed: () {}, child: Text("Start game")),
+          ElevatedButton(
+              onPressed: () {
+                game.startGame();
+              },
+              child: Text("Start game")),
         ],
       ),
     );

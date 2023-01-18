@@ -4,6 +4,9 @@ import 'package:fruitality/game/fruitality_game.dart';
 
 import '../helpers/direction.dart';
 import '../helpers/joypad.dart';
+import '../screens/game_over.dart';
+import '../screens/game_pause.dart';
+import '../screens/game_start.dart';
 
 class MainFruitalityPage extends StatefulWidget {
   const MainFruitalityPage({Key? key}) : super(key: key);
@@ -32,7 +35,16 @@ class _MainFruitalityPageState extends State<MainFruitalityPage> {
         ),
         child: Stack(
           children: [
-            GameWidget(game: _fruitaLityGame),
+            GameWidget(
+              game: _fruitaLityGame,
+              overlayBuilderMap: <String,
+                  Widget Function(BuildContext, FruitaLityGame)>{
+                'startMenuOverlay': (context, game) =>
+                    GameStartMenuOverlay(game: game),
+                'pauseMenuOverlay': (context, game) => GamePauseOverlay(),
+                'gameOverOverlay': (context, game) => GameOverOverlay(),
+              },
+            ),
             Align(
               alignment: Alignment.bottomRight,
               child: Padding(

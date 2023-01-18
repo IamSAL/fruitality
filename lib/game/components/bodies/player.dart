@@ -3,31 +3,47 @@ import 'dart:math';
 import 'package:flame/components.dart';
 
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:fruitality/game/fruitality_game.dart';
 
-import '../../helpers/direction.dart';
+import '../../../helpers/constants.dart';
+import '../../../helpers/direction.dart';
+import '../../../helpers/managers/game_manager.dart';
 
-class PlayerBody extends BodyComponent {
+class PlayerBody extends BodyComponent<FruitaLityGame> {
   Direction direction = Direction.none;
-  final double _playerSpeed = 7000;
-  Vector2 position = Vector2(768 / 2, 360 / 2);
+  double jumpSpeed = 7000;
+  Vector2 position = Constants.WORLD_SIZE / 2;
   late Vector2 size;
+  Character character;
 
   PlayerBody({
     Vector2? position,
+    required this.character,
     Vector2? size,
+    double? jumpSpeed,
   }) : size = size ?? Vector2(100, 100);
+
+  setJumpSpeed(double jumpSpeed) {
+    jumpSpeed = jumpSpeed;
+  }
+
+  void resetPosition() {
+    position = Constants.WORLD_SIZE / 2;
+  }
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+    // await loadSprite("default_player.png");
     priority = 2;
     renderBody = false;
-    final sprite = Sprite(gameRef.images.fromCache("default_player.png"));
+    final sprite = await gameRef.loadSprite("default_player.png");
     add(
       SpriteComponent(
         sprite: sprite,
         size: size,
         anchor: Anchor.center,
+        priority: 1,
       ),
     );
 
@@ -36,7 +52,7 @@ class PlayerBody extends BodyComponent {
 
   @override
   Body createBody() {
-    final shape = CircleShape()..radius = 0;
+    final shape = CircleShape()..radius = 100;
 
     final fixtureDef = FixtureDef(
       shape,
@@ -48,28 +64,27 @@ class PlayerBody extends BodyComponent {
 
     final bodyDef = BodyDef(
       position: position,
-      angle: (position.x + position.y) / 2 * pi,
       type: BodyType.dynamic,
     );
     return world.createBody(bodyDef)..createFixture(fixtureDef);
   }
 
   void moveUp(double delta) {
-    body.linearVelocity = Vector2(0, -(delta)) * _playerSpeed;
+    body.linearVelocity = Vector2(0, -(delta)) * jumpSpeed;
   }
 
   void moveDown(double delta) {
-    body.linearVelocity = Vector2(0, delta) * _playerSpeed;
+    body.linearVelocity = Vector2(0, delta) * jumpSpeed;
   }
 
   void moveLeft(double delta) {
     //body.applyLinearImpulse(Vector2(-(delta ), 0));
-    body.linearVelocity = Vector2(-(delta), 0) * _playerSpeed;
+    body.linearVelocity = Vector2(-(delta), 0) * jumpSpeed;
   }
 
   void moveRight(double delta) {
     //body.applyForce(Vector2(delta , 0));
-    body.linearVelocity = Vector2(delta, 0) * _playerSpeed;
+    body.linearVelocity = Vector2(delta, 0) * jumpSpeed;
   }
 
   void movePlayer(double delta) {
@@ -98,6 +113,7 @@ class PlayerBody extends BodyComponent {
 
   @override
   void update(double dt) {
+    if (gameRef.gameManager.isIntro || gameRef.gameManager.isGameOver) return;
     super.update(dt);
 
     movePlayer(dt);
