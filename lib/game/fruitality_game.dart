@@ -78,6 +78,17 @@ class FruitaLityGame extends Forge2DGame with HasTappables {
     }
   }
 
+  void zoomOut() {
+    double newZoom = camera.zoom - 0.1;
+    if (newZoom > 0.25) {
+      camera.zoom = newZoom;
+    }
+  }
+
+  void zoomIn() {
+    camera.zoom += 0.1;
+  }
+
   void initializeGameStart() {
     setCharacter();
 
@@ -87,9 +98,12 @@ class FruitaLityGame extends Forge2DGame with HasTappables {
     if (children.contains(player)) player.removeFromParent();
 
     add(player);
-    player.mounted.whenComplete(() => camera.followBodyComponent(player,
-        worldBounds: Rect.fromLTRB(
-            0, 0, Constants.WORLD_SIZE.x, Constants.WORLD_SIZE.y)));
+    player.mounted.whenComplete(() {
+      camera.followBodyComponent(player,
+          worldBounds: Rect.fromLTRB(
+              0, 0, Constants.WORLD_SIZE.x, Constants.WORLD_SIZE.y));
+      player.body.applyLinearImpulse(Vector2.all(550));
+    });
     levelManager.reset();
 
     objectManager = ObjectManager(
@@ -121,55 +135,6 @@ class FruitaLityGame extends Forge2DGame with HasTappables {
     add(fps);
     add(totalBodies);
     add(NormalFruit(position: Constants.WORLD_SIZE / 2));
-    add(ButtonSpriteComponent(
-      label: "Zoom Out",
-      position: Vector2(300, size.y - 20),
-      onTap: () {
-        double newZoom = camera.zoom - 0.1;
-        if (newZoom > 0.25) {
-          camera.zoom = newZoom;
-        }
-      },
-    ));
-    add(ButtonSpriteComponent(
-      label: "Zoom In",
-      position: Vector2(150, size.y - 20),
-      onTap: () {
-        camera.zoom += 0.1;
-      },
-    ));
-
-    add(ButtonSpriteComponent(
-      label: "Reset",
-      position: Vector2(size.x - 400, 30),
-      onTap: () {
-        resetGame();
-      },
-    ));
-
-    add(ButtonSpriteComponent(
-      label: "Play/Pause",
-      position: Vector2(size.x - 100, 30),
-      onTap: () {
-        togglePauseState();
-      },
-    ));
-
-    add(ButtonSpriteComponent(
-      label: "Stop player",
-      position: Vector2(530, size.y - 20),
-      onTap: () {
-        player.body.linearVelocity = Vector2.all(0);
-      },
-    ));
-
-    add(ButtonSpriteComponent(
-      label: "Boost player",
-      position: Vector2(680, size.y - 20),
-      onTap: () {
-        player.body.applyLinearImpulse(Vector2.all(550));
-      },
-    ));
 
     add(WorldBorder());
     camera.zoom = 0.7;
@@ -185,27 +150,32 @@ class FruitaLityGame extends Forge2DGame with HasTappables {
   void startGame() {
     initializeGameStart();
     gameManager.state = GameState.playing;
+    overlays.add('inGameOverlay');
     overlays.remove('startMenuOverlay');
   }
 
   void resetGame() {
     print("total children : ${children.length}");
     removeAll(children);
+    overlays.remove('inGameOverlay');
     overlays.add('startMenuOverlay');
   }
 
   void onLose() {
     gameManager.state = GameState.gameOver;
     removeAll([]);
+    overlays.remove('inGameOverlay');
     overlays.add('gameOverOverlay');
   }
 
   void togglePauseState() {
     if (paused) {
       overlays.remove('pauseMenuOverlay');
+      overlays.add('inGameOverlay');
       resumeEngine();
     } else {
       overlays.add('pauseMenuOverlay');
+      overlays.remove('inGameOverlay');
       pauseEngine();
     }
   }
