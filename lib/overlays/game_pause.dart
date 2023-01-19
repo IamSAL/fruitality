@@ -13,7 +13,7 @@ class GamePauseOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BorderRadiusGeometry radius = BorderRadius.only(
+    BorderRadiusGeometry radius = const BorderRadius.only(
       topLeft: Radius.circular(24.0),
       topRight: Radius.circular(24.0),
     );
@@ -27,45 +27,19 @@ class GamePauseOverlay extends StatelessWidget {
             Positioned(
                 top: 20,
                 left: 20,
-                child: GestureDetector(
+                child: TransparentIconBtn(
                   onTap: () {
                     game.togglePauseState();
                     game.resetGame();
                   },
-                  child: Container(
-                    width: 150,
-                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                    decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.25),
-                        // image: const DecorationImage(
-                        //     image: AssetImage("assets/images/btn_bg.png"),
-                        //     fit: BoxFit.cover),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.logout,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "Quit game",
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        )
-                      ],
-                    ),
-                  ),
+                  label: "Quit game",
                 )),
             Center(
                 child: GestureDetector(
               onTap: () {
                 game.togglePauseState();
               },
-              child: Icon(
+              child: const Icon(
                 Icons.play_arrow,
                 color: Colors.white,
                 size: 150,
@@ -79,10 +53,10 @@ class GamePauseOverlay extends StatelessWidget {
                     BoxDecoration(color: Colors.white, borderRadius: radius),
                 child: Stack(
                   children: [
-                    Align(
+                    const Align(
                       alignment: Alignment.topCenter,
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(8.0),
                         child: Text(
                           "Drag up for more options.",
                           textAlign: TextAlign.center,
@@ -126,11 +100,11 @@ class GamePauseOverlay extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       "You haven't played enough for game statistics.",
                       style: TextStyle(color: Colors.grey),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 25,
                     ),
                     GameButton(
@@ -144,6 +118,47 @@ class GamePauseOverlay extends StatelessWidget {
               ),
               borderRadius: radius,
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class TransparentIconBtn extends StatelessWidget {
+  final VoidCallback onTap;
+  final String label;
+  const TransparentIconBtn({Key? key, required this.onTap, required this.label})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 120,
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+        decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.1),
+            // image: const DecorationImage(
+            //     image: AssetImage("assets/images/btn_bg.png"),
+            //     fit: BoxFit.cover),
+            borderRadius: BorderRadius.circular(5)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.logout,
+              color: Colors.white,
+              size: 15,
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            Text(
+              label,
+              style: const TextStyle(color: Colors.white, fontSize: 14),
+            )
           ],
         ),
       ),

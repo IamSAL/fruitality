@@ -1,29 +1,29 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 
 import 'package:flame/palette.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
-import 'package:fruitality/game/components/bodies/fruit.dart';
+import 'package:fruitality/game/components/bodies/bombs/green_bomb.dart';
+import 'package:fruitality/game/components/bodies/fruits/common_fruit.dart';
+
 import 'package:fruitality/game/components/grid_image.dart';
-import 'package:fruitality/game/components/grid_parallax.dart';
+
 import 'package:fruitality/game/components/moving_parallax.dart';
-import 'package:fruitality/game/components/ui/button_sprite_component.dart';
+
 import 'package:fruitality/game/components/world_border.dart';
 import 'package:fruitality/helpers/direction.dart';
 
 import '../helpers/constants.dart';
 
 import '../helpers/managers/managers.dart';
+
 import 'components/bodies/player.dart';
-
-// // Fixed viewport size
-// final screenSize = Vector2(1280, 720);
-
-// // // Scaled viewport size
-// final worldSize = Vector2(12.8, 7.2);
 
 class FruitaLityGame extends Forge2DGame with HasTappables {
   late PlayerBody player;
@@ -78,6 +78,12 @@ class FruitaLityGame extends Forge2DGame with HasTappables {
     }
   }
 
+  @override
+  void onTapDown(int pointerId, TapDownInfo info) {
+    super.onTapDown(pointerId, info);
+    print(info);
+  }
+
   void zoomOut() {
     double newZoom = camera.zoom - 0.1;
     if (newZoom > 0.25) {
@@ -115,9 +121,9 @@ class FruitaLityGame extends Forge2DGame with HasTappables {
     objectManager.configure(levelManager.level, levelManager.difficulty);
     totalBodies = TextComponent(scale: Vector2.all(0.5))
       ..positionType = PositionType.viewport;
-    totalBodies.position = Vector2(10, size.y - 40);
+    totalBodies.position = Vector2(12, size.y - 50);
     final fps = FpsTextComponent(
-        position: Vector2(10, size.y - 20), scale: Vector2.all(0.5))
+        position: Vector2(12, size.y - 35), scale: Vector2.all(0.5))
       ..positionType = PositionType.viewport;
     final paint = BasicPalette.red.paint()..style = PaintingStyle.stroke;
     final circle = CircleComponent(
@@ -134,7 +140,6 @@ class FruitaLityGame extends Forge2DGame with HasTappables {
 
     add(fps);
     add(totalBodies);
-    add(NormalFruit(position: Constants.WORLD_SIZE / 2));
 
     add(WorldBorder());
     camera.zoom = 0.7;
@@ -155,7 +160,6 @@ class FruitaLityGame extends Forge2DGame with HasTappables {
   }
 
   void resetGame() {
-    print("total children : ${children.length}");
     removeAll(children);
     overlays.remove('inGameOverlay');
     overlays.add('startMenuOverlay');

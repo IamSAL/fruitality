@@ -40,7 +40,7 @@ class _MainFruitalityPageState extends State<MainFruitalityPage> {
               'pauseMenuOverlay': (context, game) => GamePauseOverlay(
                     game: game,
                   ),
-              'gameOverOverlay': (context, game) => GameOverOverlay(),
+              'gameOverOverlay': (context, game) => const GameOverOverlay(),
               'inGameOverlay': (context, game) => InGameOverlay(
                     game: game,
                   ),

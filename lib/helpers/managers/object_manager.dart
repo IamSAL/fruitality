@@ -5,7 +5,11 @@
 import 'dart:math';
 
 import 'package:flame/components.dart';
-import 'package:fruitality/game/components/bodies/fruit.dart';
+import 'package:fruitality/game/components/bodies/bombs/green_bomb.dart';
+import 'package:fruitality/game/components/bodies/fruits/common_fruit.dart';
+import 'package:fruitality/game/components/bodies/fruits/fruit.dart';
+import 'package:fruitality/game/components/bodies/fruits/poison_fruit.dart';
+import 'package:fruitality/game/components/bodies/fruits/special_fruit.dart';
 import 'package:fruitality/game/fruitality_game.dart';
 import 'package:fruitality/helpers/constants.dart';
 
@@ -24,8 +28,7 @@ class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
   double minVerticalDistanceToNextObject;
   double maxVerticalDistanceToNextObject;
   final probGen = ProbabilityGenerator();
-  final double _tallestFruitHeight = 50;
-  final List<Fruit> _fruits = [];
+  final List<Fruit> _commonFruits = [];
 
   @override
   void onMount() {
@@ -42,7 +45,7 @@ class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
         currentX = _generateNextX(100);
         currentY = _generateNextY();
       }
-      _fruits.add(
+      _commonFruits.add(
         _semiRandomFruit(
           Vector2(
             currentX,
@@ -51,55 +54,47 @@ class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
         ),
       );
 
-      add(_fruits[i]);
+      add(_commonFruits[i]);
     }
   }
 
   @override
   void update(double dt) {
     //max 5 items per second & max 500 items alive at once;
-    if (probGen.generateWithProbability(10) && _fruits.length < 500) {
-      print("Total fruits");
-      print(_fruits.length);
+    if (probGen.generateWithProbability(15) && _commonFruits.length < 500) {
       var newPlatY = _generateNextY();
       var newPlatX = _generateNextX(50);
       final nextPlat = _semiRandomFruit(Vector2(newPlatX, newPlatY));
-      print("Will add");
-      print(nextPlat);
-      print(Vector2(newPlatX, newPlatY));
-      add(nextPlat);
-      _fruits.add(nextPlat);
-      gameRef.gameManager.increaseScore();
 
+      add(nextPlat);
+      _commonFruits.add(nextPlat);
       _maybeRemoveFruits();
-      _maybeAddEnemy();
-      _maybeAddPowerup();
+      _maybeAddBombs();
+      // _maybeAddBoosters();
     }
-    if (_fruits.length > 300) {
+    if (_commonFruits.length > 250) {
       _maybeRemoveFruits();
-      _maybeAddEnemy();
+      _maybeAddBombs();
     }
 
     super.update(dt);
   }
 
-  final Map<String, bool> specialFruits = {
-    'spring': true, // level 1
-    'broken': false, // level 2
-    'noogler': false, // level 3
+  final Map<String, bool> specialItems = {
+    'special_fruit': true, // level 1
     'rocket': false, // level 4
     'enemy': false, // level 5
   };
 
   void _maybeRemoveFruits() {
-    if (probGen.generateWithProbability(75) && _fruits.isNotEmpty) {
-      final oldestFruit = _fruits.removeAt(0);
+    if (probGen.generateWithProbability(75) && _commonFruits.isNotEmpty) {
+      final oldestFruit = _commonFruits.removeAt(0);
       oldestFruit.removeFromParent();
     }
   }
 
   void enableSpecialty(String specialty) {
-    specialFruits[specialty] = true;
+    specialItems[specialty] = true;
   }
 
   void enableLevelSpecialty(int level) {
@@ -123,8 +118,8 @@ class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
   }
 
   void resetSpecialties() {
-    for (var key in specialFruits.keys) {
-      specialFruits[key] = false;
+    for (var key in specialItems.keys) {
+      specialItems[key] = false;
     }
   }
 
@@ -146,62 +141,58 @@ class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
   }
 
   Fruit _semiRandomFruit(Vector2 position) {
-    if (specialFruits['spring'] == true &&
+    if (specialItems['special_fruit'] == true &&
         probGen.generateWithProbability(15)) {
-      return SpringBoard(position: position);
+      return SpecialFruit(position: position);
     }
 
-    if (specialFruits['broken'] == true &&
-        probGen.generateWithProbability(10)) {
-      return BrokenFruit(position: position);
+    if (specialItems['special_fruit'] == true &&
+        probGen.generateWithProbability(5)) {
+      return PoisonFruit(position: position);
     }
 
-    return NormalFruit(position: position);
+    return CommonFruit(position: position);
   }
 
-  final List<EnemyFruit> _enemies = [];
-  void _maybeAddEnemy() {
-    if (specialFruits['enemy'] != true) {
+  final List<Fruit> _bombs = [];
+  void _maybeAddBombs() {
+    if (specialItems['enemy'] != true) {
       return;
     }
     if (probGen.generateWithProbability(20)) {
-      var enemy = EnemyFruit(
+      var enemy = GreenBomb(
         position: Vector2(_generateNextX(100), _generateNextY()),
       );
       add(enemy);
-      _enemies.add(enemy);
-      _cleanupEnemies();
+      _bombs.add(enemy);
+      _maybeRemoveBombs();
     }
   }
 
-  void _cleanupEnemies() {
-    // final screenBottom = gameRef.player.position.y +
-    //     (gameRef.size.x / 2) +
-    //     gameRef.screenBufferSpace;
-
-    // while (_enemies.isNotEmpty && _enemies.first.position.y > screenBottom) {
-    //   remove(_enemies.first);
-    //   _enemies.removeAt(0);
-    // }
+  void _maybeRemoveBombs() {
+    if (probGen.generateWithProbability(95) && _bombs.isNotEmpty) {
+      final oldestFruit = _bombs.removeAt(0);
+      oldestFruit.removeFromParent();
+    }
   }
 
-  final List<PowerUp> _powerups = [];
+  final List<PowerUp> _boosters = [];
 
-  void _maybeAddPowerup() {
-    if (specialFruits['noogler'] == true &&
+  void _maybeAddBoosters() {
+    if (specialItems['noogler'] == true &&
         probGen.generateWithProbability(20)) {
       var nooglerHat = NooglerHat(
         position: Vector2(_generateNextX(75), _generateNextY()),
       );
       add(nooglerHat);
-      _powerups.add(nooglerHat);
-    } else if (specialFruits['rocket'] == true &&
+      _boosters.add(nooglerHat);
+    } else if (specialItems['rocket'] == true &&
         probGen.generateWithProbability(15)) {
       var rocket = Rocket(
         position: Vector2(_generateNextX(50), _generateNextY()),
       );
       add(rocket);
-      _powerups.add(rocket);
+      _boosters.add(rocket);
     }
 
     _cleanupPowerups();

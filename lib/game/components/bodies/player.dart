@@ -43,7 +43,6 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
         sprite: sprite,
         size: size,
         anchor: Anchor.center,
-        priority: 1,
       ),
     );
 
@@ -52,7 +51,7 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
 
   @override
   Body createBody() {
-    final shape = CircleShape()..radius = 100;
+    final shape = CircleShape()..radius = 100 / 2.35;
 
     final fixtureDef = FixtureDef(
       shape,
@@ -88,10 +87,7 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
   }
 
   void movePlayer(double delta) {
-    if (direction != Direction.none) {
-      print("delta $delta");
-      print("direction $direction");
-    }
+    if (direction != Direction.none) {}
     switch (direction) {
       case Direction.up:
         moveUp(delta);

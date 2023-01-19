@@ -20,12 +20,12 @@ class DebugOverlay extends StatelessWidget {
     );
 
     return Transform.translate(
-      offset: Offset(0, -2),
+      offset: const Offset(0, -2),
       child: Container(
         color: Colors.transparent,
         child: Container(
           height: 75,
-          margin: EdgeInsets.symmetric(horizontal: 100),
+          margin: const EdgeInsets.symmetric(horizontal: 150),
           decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.25),
               borderRadius: radius,
@@ -36,7 +36,7 @@ class DebugOverlay extends StatelessWidget {
             child: Stack(
               children: [
                 Transform.translate(
-                  offset: Offset(0, 18),
+                  offset: const Offset(0, 18),
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: GestureDetector(
@@ -44,10 +44,10 @@ class DebugOverlay extends StatelessWidget {
                         game.overlays.remove("debugOverlay");
                       },
                       child: Container(
-                        padding: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
+                        padding: const EdgeInsets.all(5),
+                        decoration: const BoxDecoration(
                             color: Colors.white, shape: BoxShape.circle),
-                        child: Icon(
+                        child: const Icon(
                           Icons.close,
                           size: 25,
                           color: Colors.grey,
@@ -66,13 +66,13 @@ class DebugOverlay extends StatelessWidget {
                         children: [
                           IconButton(
                               onPressed: game.zoomIn,
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.zoom_in,
                                 color: Colors.white,
                               )),
                           IconButton(
                               onPressed: game.zoomOut,
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.zoom_out,
                                 color: Colors.white,
                               )),
@@ -81,7 +81,7 @@ class DebugOverlay extends StatelessWidget {
                                 game.player.body.linearVelocity =
                                     Vector2.all(0);
                               },
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.stop_circle,
                                 color: Colors.white,
                               )),
@@ -91,7 +91,7 @@ class DebugOverlay extends StatelessWidget {
                                 game.player.body
                                     .applyLinearImpulse(Vector2.all(550));
                               },
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.fast_forward,
                                 color: Colors.white,
                               )),
