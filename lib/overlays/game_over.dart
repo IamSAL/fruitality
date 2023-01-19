@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class GameEndWin extends StatelessWidget {
-  const GameEndWin({Key? key}) : super(key: key);
+class GameOverOverlay extends StatelessWidget {
+  const GameOverOverlay({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

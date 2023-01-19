@@ -41,3 +41,7 @@ class ProbabilityGenerator {
     return false;
   }
 }
+
+extension PercentOf on num {
+  double percent(num other) => this * other / 100;
+}

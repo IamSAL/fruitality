@@ -55,7 +55,7 @@ class ButtonSpriteComponent extends SpriteGroupComponent<ButtonState>
   @override
   Future<void>? onLoad() async {
     positionType = PositionType.viewport;
-    scale = Vector2.all(0.75);
+    scale = Vector2(0.55, 0.70);
     final pressedSprite = await gameRef.loadSprite("btn_bg_pressed.png");
     final unpressedSprite = await gameRef.loadSprite("btn_bg_normal.png");
     size = pressedSprite.originalSize;
