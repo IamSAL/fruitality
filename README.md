@@ -1,16 +1,6 @@
 # fruitality
 
-A new Flutter project.
+A flutter-flame project, cloning agar.io;
 
-## Getting Started
+![image](https://user-images.githubusercontent.com/34414233/213694493-5af53276-418b-454f-8cae-5c4ab11b4aba.png)
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
