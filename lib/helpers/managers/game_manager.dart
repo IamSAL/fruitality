@@ -8,28 +8,49 @@ import 'package:fruitality/game/fruitality_game.dart';
 
 enum Character { rabbit, dino }
 
+enum GameResult { win, loose, unknown }
+
 class GameManager extends Component with HasGameRef<FruitaLityGame> {
-  GameManager();
+  GameManager() {
+    interval = Timer(
+      1,
+      onTick: () => elapsedSecs.value += 1,
+      repeat: true,
+    );
+  }
 
   Character character = Character.rabbit;
-  ValueNotifier<int> score = ValueNotifier(0);
+  ValueNotifier<int> fruits = ValueNotifier(0);
+  ValueNotifier<int> elapsedSecs = ValueNotifier(0);
+  late Timer interval;
+  GameResult result = GameResult.unknown;
   GameState state = GameState.intro;
 
   bool get isPlaying => state == GameState.playing;
+
   bool get isGameOver => state == GameState.gameOver;
+
   bool get isIntro => state == GameState.intro;
 
   void reset() {
-    score.value = 0;
+    elapsedSecs.value = 0;
+
+    fruits.value = 0;
     state = GameState.intro;
   }
 
   void increaseScore() {
-    score.value++;
+    fruits.value++;
   }
 
   void selectCharacter(Character selectedCharacter) {
     character = selectedCharacter;
+  }
+
+  @override
+  void update(double dt) {
+    interval.update(dt);
+    super.update(dt);
   }
 }
 

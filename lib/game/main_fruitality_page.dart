@@ -33,14 +33,14 @@ class _MainFruitalityPageState extends State<MainFruitalityPage> {
           ),
           child: GameWidget(
             game: _fruitaLityGame,
-            overlayBuilderMap: <String,
-                Widget Function(BuildContext, FruitaLityGame)>{
-              'startMenuOverlay': (context, game) =>
-                  GameStartMenuOverlay(game: game),
+            overlayBuilderMap: <String, Widget Function(BuildContext, FruitaLityGame)>{
+              'startMenuOverlay': (context, game) => GameStartMenuOverlay(game: game),
               'pauseMenuOverlay': (context, game) => GamePauseOverlay(
                     game: game,
                   ),
-              'gameOverOverlay': (context, game) => const GameOverOverlay(),
+              'gameOverOverlay': (context, game) => GameOverOverlay(
+                    game: game,
+                  ),
               'inGameOverlay': (context, game) => InGameOverlay(
                     game: game,
                   ),

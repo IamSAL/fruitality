@@ -5,6 +5,8 @@
 import 'dart:math';
 
 import 'package:flame/components.dart';
+import 'package:flame_forge2d/body_component.dart';
+import 'package:fruitality/game/components/bodies/bombs/bomb.dart';
 import 'package:fruitality/game/components/bodies/bombs/green_bomb.dart';
 import 'package:fruitality/game/components/bodies/fruits/common_fruit.dart';
 import 'package:fruitality/game/components/bodies/fruits/fruit.dart';
@@ -20,50 +22,53 @@ import './managers.dart';
 final Random _rand = Random();
 
 class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
-  ObjectManager({
-    this.minVerticalDistanceToNextObject = 150,
-    this.maxVerticalDistanceToNextObject = 1000,
-  });
+  ObjectManager(
+      {this.minVerticalDistanceToNextObject = 150, this.maxVerticalDistanceToNextObject = 1000, super.priority = 1});
 
-  double minVerticalDistanceToNextObject;
   double maxVerticalDistanceToNextObject;
+  double minVerticalDistanceToNextObject;
+  Set<BodyComponent> objectsMarkedForRemoval = {};
   final probGen = ProbabilityGenerator();
+  final Map<String, bool> specialItems = {
+    'special_fruit': true, // level 1
+    'rocket': false, // level 4
+    'enemy': false, // level 5
+  };
+
+  final List<Bomb> _bombs = [];
+  final List<PowerUp> _boosters = [];
   final List<Fruit> _commonFruits = [];
 
   @override
   void onMount() {
     super.onMount();
 
-    var currentX = (Constants.WORLD_SIZE.x.floor() / 2).toDouble() - 50;
+    //add some random fruits
+    _commonFruits.addAll(List.generate(250, (index) {
+      Fruit fruit = _semiRandomFruit(Vector2(_generateNextX(), _generateNextY()));
+      add(fruit);
+      return fruit;
+    }));
 
-    var currentY = Constants.WORLD_SIZE.y -
-        (_rand.nextInt(Constants.WORLD_SIZE.y.floor()) / 3) -
-        50;
-
-    for (var i = 0; i < 9; i++) {
-      if (i != 0) {
-        currentX = _generateNextX(100);
-        currentY = _generateNextY();
-      }
-      _commonFruits.add(
-        _semiRandomFruit(
-          Vector2(
-            currentX,
-            currentY,
-          ),
-        ),
+    //add some bombs
+    _bombs.addAll(List.generate(75, (index) {
+      Bomb<PoisonBombState> bomb = PoisonBomb(
+        position: Vector2(_generateNextX(), _generateNextY()),
       );
-
-      add(_commonFruits[i]);
-    }
+      add(bomb);
+      return bomb;
+    }));
   }
 
   @override
   void update(double dt) {
+    if (!gameRef.world.isLocked) {
+      removeObjectsMarkedForRemoval();
+    }
     //max 5 items per second & max 500 items alive at once;
-    if (probGen.generateWithProbability(15) && _commonFruits.length < 500) {
+    if (probGen.generateWithProbability(10) && _commonFruits.length < 1000) {
       var newPlatY = _generateNextY();
-      var newPlatX = _generateNextX(50);
+      var newPlatX = _generateNextX();
       final nextPlat = _semiRandomFruit(Vector2(newPlatX, newPlatY));
 
       add(nextPlat);
@@ -78,19 +83,6 @@ class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
     }
 
     super.update(dt);
-  }
-
-  final Map<String, bool> specialItems = {
-    'special_fruit': true, // level 1
-    'rocket': false, // level 4
-    'enemy': false, // level 5
-  };
-
-  void _maybeRemoveFruits() {
-    if (probGen.generateWithProbability(75) && _commonFruits.isNotEmpty) {
-      final oldestFruit = _commonFruits.removeAt(0);
-      oldestFruit.removeFromParent();
-    }
   }
 
   void enableSpecialty(String specialty) {
@@ -132,64 +124,76 @@ class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
     }
   }
 
-  double _generateNextX(int FruitWidth) {
+  void removeObjectsMarkedForRemoval() {
+    if (objectsMarkedForRemoval.isNotEmpty) {
+      objectsMarkedForRemoval.toList().forEach((BodyComponent object) {
+        gameRef.world.destroyBody(object.body);
+        object.removeFromParent();
+        objectsMarkedForRemoval.remove(object);
+      });
+    }
+  }
+
+  void _maybeRemoveFruits() {
+    if (probGen.generateWithProbability(50) && _commonFruits.isNotEmpty) {
+      final oldestFruit = _commonFruits.removeAt(0);
+      oldestFruit.removeFromParent();
+    }
+  }
+
+  double _generateNextX() {
     return _rand.nextInt(Constants.WORLD_SIZE.x.toInt()).toDouble();
+    //TODO:avoid player's position;
   }
 
   double _generateNextY() {
     return _rand.nextInt(Constants.WORLD_SIZE.y.toInt()).toDouble();
+    //TODO:avoid player's position;
   }
 
   Fruit _semiRandomFruit(Vector2 position) {
-    if (specialItems['special_fruit'] == true &&
-        probGen.generateWithProbability(15)) {
+    if (specialItems['special_fruit'] == true && probGen.generateWithProbability(15)) {
       return SpecialFruit(position: position);
     }
 
-    if (specialItems['special_fruit'] == true &&
-        probGen.generateWithProbability(5)) {
+    if (specialItems['special_fruit'] == true && probGen.generateWithProbability(5)) {
       return PoisonFruit(position: position);
     }
 
     return CommonFruit(position: position);
   }
 
-  final List<Fruit> _bombs = [];
   void _maybeAddBombs() {
     if (specialItems['enemy'] != true) {
       return;
     }
-    if (probGen.generateWithProbability(20)) {
-      var enemy = GreenBomb(
-        position: Vector2(_generateNextX(100), _generateNextY()),
+    if (probGen.generateWithProbability(50)) {
+      var bomb = PoisonBomb(
+        position: Vector2(_generateNextX(), _generateNextY()),
       );
-      add(enemy);
-      _bombs.add(enemy);
+      add(bomb);
+      _bombs.add(bomb);
       _maybeRemoveBombs();
     }
   }
 
   void _maybeRemoveBombs() {
     if (probGen.generateWithProbability(95) && _bombs.isNotEmpty) {
-      final oldestFruit = _bombs.removeAt(0);
-      oldestFruit.removeFromParent();
+      final oldestBomb = _bombs.removeAt(0);
+      oldestBomb.removeFromParent();
     }
   }
 
-  final List<PowerUp> _boosters = [];
-
   void _maybeAddBoosters() {
-    if (specialItems['noogler'] == true &&
-        probGen.generateWithProbability(20)) {
+    if (specialItems['noogler'] == true && probGen.generateWithProbability(20)) {
       var nooglerHat = NooglerHat(
-        position: Vector2(_generateNextX(75), _generateNextY()),
+        position: Vector2(_generateNextX(), _generateNextY()),
       );
       add(nooglerHat);
       _boosters.add(nooglerHat);
-    } else if (specialItems['rocket'] == true &&
-        probGen.generateWithProbability(15)) {
+    } else if (specialItems['rocket'] == true && probGen.generateWithProbability(15)) {
       var rocket = Rocket(
-        position: Vector2(_generateNextX(50), _generateNextY()),
+        position: Vector2(_generateNextX(), _generateNextY()),
       );
       add(rocket);
       _boosters.add(rocket);

@@ -2,7 +2,7 @@ import 'package:flame_forge2d/flame_forge2d.dart';
 
 import '../../../fruitality_game.dart';
 
-class Fruit<T> extends BodyComponent<FruitaLityGame> {
+class Fruit<T> extends BodyComponent<FruitaLityGame> with ContactCallbacks {
   Vector2 position;
   T currentState;
 
@@ -25,5 +25,10 @@ class Fruit<T> extends BodyComponent<FruitaLityGame> {
       type: BodyType.dynamic,
     );
     return world.createBody(bodyDef)..createFixture(fixtureDef);
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
   }
 }

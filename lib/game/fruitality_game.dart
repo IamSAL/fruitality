@@ -9,6 +9,7 @@ import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fruitality/game/components/bodies/bombs/green_bomb.dart';
 import 'package:fruitality/game/components/bodies/fruits/common_fruit.dart';
 
@@ -25,7 +26,7 @@ import '../helpers/managers/managers.dart';
 
 import 'components/bodies/player.dart';
 
-class FruitaLityGame extends Forge2DGame with HasTappables {
+class FruitaLityGame extends Forge2DGame with HasTappables, KeyboardEvents {
   late PlayerBody player;
   late TextComponent totalBodies;
   final MovingParallax overlayParallax = MovingParallax();
@@ -84,6 +85,30 @@ class FruitaLityGame extends Forge2DGame with HasTappables {
     print(info);
   }
 
+  @override
+  KeyEventResult onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+    final isKeyDown = event is RawKeyDownEvent;
+    Direction? keyDirection = null;
+
+    if (event.logicalKey == LogicalKeyboardKey.keyA) {
+      keyDirection = Direction.left;
+    } else if (event.logicalKey == LogicalKeyboardKey.keyD) {
+      keyDirection = Direction.right;
+    } else if (event.logicalKey == LogicalKeyboardKey.keyW) {
+      keyDirection = Direction.up;
+    } else if (event.logicalKey == LogicalKeyboardKey.keyS) {
+      keyDirection = Direction.down;
+    }
+
+    if (isKeyDown && keyDirection != null) {
+      player.direction = keyDirection;
+    } else {
+      player.direction = Direction.none;
+    }
+
+    return super.onKeyEvent(event, keysPressed);
+  }
+
   void zoomOut() {
     double newZoom = camera.zoom - 0.1;
     if (newZoom > 0.25) {
@@ -106,8 +131,7 @@ class FruitaLityGame extends Forge2DGame with HasTappables {
     add(player);
     player.mounted.whenComplete(() {
       camera.followBodyComponent(player,
-          worldBounds: Rect.fromLTRB(
-              0, 0, Constants.WORLD_SIZE.x, Constants.WORLD_SIZE.y));
+          worldBounds: Rect.fromLTRB(0, 0, Constants.WORLD_SIZE.x, Constants.WORLD_SIZE.y));
       player.body.applyLinearImpulse(Vector2.all(550));
     });
     levelManager.reset();
@@ -119,15 +143,12 @@ class FruitaLityGame extends Forge2DGame with HasTappables {
     add(objectManager);
 
     objectManager.configure(levelManager.level, levelManager.difficulty);
-    totalBodies = TextComponent(scale: Vector2.all(0.5))
-      ..positionType = PositionType.viewport;
+    totalBodies = TextComponent(scale: Vector2.all(0.5))..positionType = PositionType.viewport;
     totalBodies.position = Vector2(12, size.y - 50);
-    final fps = FpsTextComponent(
-        position: Vector2(12, size.y - 35), scale: Vector2.all(0.5))
+    final fps = FpsTextComponent(position: Vector2(12, size.y - 35), scale: Vector2.all(0.5))
       ..positionType = PositionType.viewport;
     final paint = BasicPalette.red.paint()..style = PaintingStyle.stroke;
-    final circle = CircleComponent(
-        radius: 50.0, position: Constants.WORLD_SIZE / 2, paint: paint);
+    final circle = CircleComponent(radius: 50.0, position: Constants.WORLD_SIZE / 2, paint: paint);
     circle.removeFromParent();
     final GridImageBackground gridImageBackground = GridImageBackground();
     gridImageBackground.removeFromParent();
@@ -167,7 +188,14 @@ class FruitaLityGame extends Forge2DGame with HasTappables {
 
   void onLose() {
     gameManager.state = GameState.gameOver;
-    removeAll([]);
+    gameManager.result = GameResult.loose;
+    overlays.remove('inGameOverlay');
+    overlays.add('gameOverOverlay');
+  }
+
+  void onWin() {
+    gameManager.state = GameState.gameOver;
+    gameManager.result = GameResult.win;
     overlays.remove('inGameOverlay');
     overlays.add('gameOverOverlay');
   }
@@ -185,7 +213,7 @@ class FruitaLityGame extends Forge2DGame with HasTappables {
   }
 
   void checkLevelUp() {
-    if (levelManager.shouldLevelUp(gameManager.score.value)) {
+    if (levelManager.shouldLevelUp(gameManager.fruits.value)) {
       levelManager.increaseLevel();
 
       objectManager.configure(levelManager.level, levelManager.difficulty);

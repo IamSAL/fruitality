@@ -31,22 +31,20 @@ class DebugOverlay extends StatelessWidget {
               borderRadius: radius,
               border: Border.all(color: Colors.white, width: 1)),
           child: Container(
-            decoration:
-                BoxDecoration(color: Colors.transparent, borderRadius: radius),
+            decoration: BoxDecoration(color: Colors.transparent, borderRadius: radius),
             child: Stack(
               children: [
-                Transform.translate(
-                  offset: const Offset(0, 18),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: GestureDetector(
-                      onTap: () {
-                        game.overlays.remove("debugOverlay");
-                      },
+                GestureDetector(
+                  onTap: () {
+                    game.overlays.remove("debugOverlay");
+                  },
+                  child: Transform.translate(
+                    offset: const Offset(0, 18),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
                       child: Container(
                         padding: const EdgeInsets.all(5),
-                        decoration: const BoxDecoration(
-                            color: Colors.white, shape: BoxShape.circle),
+                        decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
                         child: const Icon(
                           Icons.close,
                           size: 25,
@@ -78,8 +76,7 @@ class DebugOverlay extends StatelessWidget {
                               )),
                           IconButton(
                               onPressed: () {
-                                game.player.body.linearVelocity =
-                                    Vector2.all(0);
+                                game.player.body.linearVelocity = Vector2.all(0);
                               },
                               icon: const Icon(
                                 Icons.stop_circle,
@@ -88,8 +85,7 @@ class DebugOverlay extends StatelessWidget {
                           IconButton(
                               onPressed: () {
                                 game.camera.shake(duration: 1, intensity: 5);
-                                game.player.body
-                                    .applyLinearImpulse(Vector2.all(550));
+                                game.player.body.applyLinearImpulse(Vector2.all(550));
                               },
                               icon: const Icon(
                                 Icons.fast_forward,
