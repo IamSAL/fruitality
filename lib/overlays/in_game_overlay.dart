@@ -32,7 +32,8 @@ class InGameOverlay extends StatelessWidget {
                       borderRadius: radius,
                       border: Border.all(color: Colors.white, width: 0)),
                   child: Container(
-                    decoration: BoxDecoration(color: Colors.transparent, borderRadius: radius),
+                    decoration: BoxDecoration(
+                        color: Colors.transparent, borderRadius: radius),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -50,7 +51,10 @@ class InGameOverlay extends StatelessWidget {
                             builder: (context, value, child) {
                               return Text(
                                 value.toString(),
-                                style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w600),
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600),
                               );
                             }),
                       ],
@@ -93,7 +97,10 @@ class InGameOverlay extends StatelessWidget {
                             builder: ((context, value, child) {
                               return Text(
                                 formatedTime(time: value),
-                                style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w600),
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600),
                               );
                             }))
                       ],
@@ -123,31 +130,45 @@ class InGameOverlay extends StatelessWidget {
                     children: [
                       Text(
                         "Level",
-                        style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600),
                       ),
                       Text(
                         "1",
-                        style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600),
                       ),
                       Text(
                         "2",
-                        style:
-                            TextStyle(fontSize: 15, color: Colors.white.withOpacity(0.75), fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white.withOpacity(0.75),
+                            fontWeight: FontWeight.w600),
                       ),
                       Text(
                         "3",
-                        style:
-                            TextStyle(fontSize: 15, color: Colors.white.withOpacity(0.25), fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white.withOpacity(0.25),
+                            fontWeight: FontWeight.w600),
                       ),
                       Text(
                         "4",
-                        style:
-                            TextStyle(fontSize: 15, color: Colors.white.withOpacity(0.25), fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white.withOpacity(0.25),
+                            fontWeight: FontWeight.w600),
                       ),
                       Text(
                         "5",
-                        style:
-                            TextStyle(fontSize: 15, color: Colors.white.withOpacity(0.25), fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white.withOpacity(0.25),
+                            fontWeight: FontWeight.w600),
                       )
                     ],
                   ),
@@ -183,18 +204,20 @@ class InGameOverlay extends StatelessWidget {
                         Icons.settings,
                         color: Colors.white.withOpacity(0.75),
                         size: 35,
-                      ))
+                      )),
                 ],
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 60),
-              child: Joypad(onDirectionChanged: game.onJoypadDirectionChanged),
-            ),
-          ),
+          ValueListenableBuilder(
+              valueListenable: game.gameManager.pointerPosition,
+              builder: (context, value, child) {
+                return Positioned(
+                    top: value.y - 50,
+                    left: value.x - 50,
+                    child: Joypad(
+                        onDirectionChanged: game.onJoypadDirectionChanged));
+              })
         ],
       ),
     );

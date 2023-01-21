@@ -19,6 +19,7 @@ import 'package:fruitality/game/components/moving_parallax.dart';
 
 import 'package:fruitality/game/components/world_border.dart';
 import 'package:fruitality/helpers/direction.dart';
+import 'package:fruitality/helpers/managers/actor_manager.dart';
 
 import '../helpers/constants.dart';
 
@@ -26,12 +27,18 @@ import '../helpers/managers/managers.dart';
 
 import 'components/bodies/player.dart';
 
-class FruitaLityGame extends Forge2DGame with HasTappables, KeyboardEvents {
+class FruitaLityGame extends Forge2DGame
+    with
+        HasTappables,
+        KeyboardEvents,
+        MouseMovementDetector,
+        MultiTouchDragDetector {
   late PlayerBody player;
   late TextComponent totalBodies;
   final MovingParallax overlayParallax = MovingParallax();
   final LevelManager levelManager = LevelManager();
   final GameManager gameManager = GameManager();
+  final ActorManager actorManager = ActorManager();
   int screenBufferSpace = 300;
   ObjectManager objectManager = ObjectManager();
 
@@ -58,6 +65,7 @@ class FruitaLityGame extends Forge2DGame with HasTappables, KeyboardEvents {
     overlays.add('startMenuOverlay');
     await add(levelManager);
     add(overlayParallax);
+    add(actorManager);
   }
 
   @override
@@ -79,14 +87,29 @@ class FruitaLityGame extends Forge2DGame with HasTappables, KeyboardEvents {
     }
   }
 
+  // @override
+  // void onTapDown(int pointerId, TapDownInfo info) {
+  //   super.onTapDown(pointerId, info);
+  //   actorManager.moveToPointerDirector(info.eventPosition);
+  //   print(info.eventPosition.game);
+  //   print(info);
+  // }
   @override
-  void onTapDown(int pointerId, TapDownInfo info) {
-    super.onTapDown(pointerId, info);
-    print(info);
+  bool onDragUpdate(int pointerId, DragUpdateInfo details) {
+    actorManager.moveToPointerDirector(details.eventPosition);
+    gameManager.pointerPosition.value = details.eventPosition.global;
+    return false;
   }
 
   @override
-  KeyEventResult onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+  void onMouseMove(PointerHoverInfo info) {
+    actorManager.moveToPointerDirector(info.eventPosition);
+    super.onMouseMove(info);
+  }
+
+  @override
+  KeyEventResult onKeyEvent(
+      RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     final isKeyDown = event is RawKeyDownEvent;
     Direction? keyDirection = null;
 
@@ -131,7 +154,8 @@ class FruitaLityGame extends Forge2DGame with HasTappables, KeyboardEvents {
     add(player);
     player.mounted.whenComplete(() {
       camera.followBodyComponent(player,
-          worldBounds: Rect.fromLTRB(0, 0, Constants.WORLD_SIZE.x, Constants.WORLD_SIZE.y));
+          worldBounds: Rect.fromLTRB(
+              0, 0, Constants.WORLD_SIZE.x, Constants.WORLD_SIZE.y));
       player.body.applyLinearImpulse(Vector2.all(550));
     });
     levelManager.reset();
@@ -143,12 +167,15 @@ class FruitaLityGame extends Forge2DGame with HasTappables, KeyboardEvents {
     add(objectManager);
 
     objectManager.configure(levelManager.level, levelManager.difficulty);
-    totalBodies = TextComponent(scale: Vector2.all(0.5))..positionType = PositionType.viewport;
+    totalBodies = TextComponent(scale: Vector2.all(0.5))
+      ..positionType = PositionType.viewport;
     totalBodies.position = Vector2(12, size.y - 50);
-    final fps = FpsTextComponent(position: Vector2(12, size.y - 35), scale: Vector2.all(0.5))
+    final fps = FpsTextComponent(
+        position: Vector2(12, size.y - 35), scale: Vector2.all(0.5))
       ..positionType = PositionType.viewport;
     final paint = BasicPalette.red.paint()..style = PaintingStyle.stroke;
-    final circle = CircleComponent(radius: 50.0, position: Constants.WORLD_SIZE / 2, paint: paint);
+    final circle = CircleComponent(
+        radius: 50.0, position: Constants.WORLD_SIZE / 2, paint: paint);
     circle.removeFromParent();
     final GridImageBackground gridImageBackground = GridImageBackground();
     gridImageBackground.removeFromParent();

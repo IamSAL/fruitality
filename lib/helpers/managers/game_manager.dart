@@ -22,6 +22,7 @@ class GameManager extends Component with HasGameRef<FruitaLityGame> {
   Character character = Character.rabbit;
   ValueNotifier<int> fruits = ValueNotifier(0);
   ValueNotifier<int> elapsedSecs = ValueNotifier(0);
+  ValueNotifier<Vector2> pointerPosition = ValueNotifier(Vector2(0, 0));
   late Timer interval;
   GameResult result = GameResult.unknown;
   GameState state = GameState.intro;
