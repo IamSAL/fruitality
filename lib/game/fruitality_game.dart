@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
@@ -70,7 +69,7 @@ class FruitaLityGame extends Forge2DGame
   KeyEventResult onKeyEvent(
       RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     final isKeyDown = event is RawKeyDownEvent;
-    Direction? keyDirection = null;
+    Direction? keyDirection;
 
     if (event.logicalKey == LogicalKeyboardKey.keyA) {
       keyDirection = Direction.left;

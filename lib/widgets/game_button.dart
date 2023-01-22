@@ -50,7 +50,7 @@ class _GameButtonState extends State<GameButton> {
                     fit: BoxFit.cover),
                 // button text
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Color(0xFFC2C2C2), width: 2)),
+                border: Border.all(color: const Color(0xFFC2C2C2), width: 2)),
             child: Center(
               child: Text(
                 widget.label,

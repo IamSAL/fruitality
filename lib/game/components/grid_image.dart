@@ -1,6 +1,4 @@
 import 'package:flame/components.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 class GridImageBackground extends SpriteComponent with HasGameRef {
   @override

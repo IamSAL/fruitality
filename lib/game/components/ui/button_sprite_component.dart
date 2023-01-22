@@ -2,7 +2,6 @@ import 'dart:collection';
 
 import 'package:flame/components.dart';
 import 'package:flame/input.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fruitality/game/fruitality_game.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -67,12 +66,12 @@ class ButtonSpriteComponent extends SpriteGroupComponent<ButtonState>
     final textStyle = GoogleFonts.racingSansOne(
         fontSize: 24.0,
         fontWeight: FontWeight.w600,
-        shadows: outlinedText(strokeColor: Color(0xFF3D3D3D)));
+        shadows: outlinedText(strokeColor: const Color(0xFF3D3D3D)));
 
     final pressedText = TextPaint(style: textStyle);
 
     add(TextComponent(
-        text: this.label,
+        text: label,
         position: size / 2,
         anchor: Anchor.center,
         textRenderer: pressedText));

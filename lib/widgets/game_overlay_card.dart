@@ -10,7 +10,7 @@ class GameOverlayCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BackdropFilter(
-      filter: new ImageFilter.blur(sigmaX: 2.5, sigmaY: 2.5),
+      filter: ImageFilter.blur(sigmaX: 2.5, sigmaY: 2.5),
       child: Container(
         width: MediaQuery.of(context).size.width.percent(100),
         height: MediaQuery.of(context).size.height,

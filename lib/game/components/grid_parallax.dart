@@ -1,9 +1,6 @@
 import 'package:flame/components.dart';
-import 'package:flame/flame.dart';
-import 'package:flame/game.dart';
 import 'package:flame/parallax.dart';
 import 'package:flutter/material.dart';
-import 'package:fruitality/game/fruitality_game.dart';
 
 class GridParallaxComponent extends ParallaxComponent {
   static final backgroundVelocity = Vector2(30.0, 0);

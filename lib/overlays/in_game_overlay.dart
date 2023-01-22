@@ -23,7 +23,7 @@ class InGameOverlay extends StatelessWidget {
           Positioned(
               top: 20,
               child: Transform.translate(
-                offset: Offset(-1, 0),
+                offset: const Offset(-1, 0),
                 child: Container(
                   height: 50,
                   width: 120,
@@ -43,7 +43,7 @@ class InGameOverlay extends StatelessWidget {
                           width: 30,
                           height: 25,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 5,
                         ),
                         ValueListenableBuilder(
@@ -51,7 +51,7 @@ class InGameOverlay extends StatelessWidget {
                             builder: (context, value, child) {
                               return Text(
                                 value.toString(),
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 20,
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600),
@@ -66,7 +66,7 @@ class InGameOverlay extends StatelessWidget {
               top: 20,
               right: 0,
               child: Transform.translate(
-                offset: Offset(1, 0),
+                offset: const Offset(1, 0),
                 child: Container(
                   height: 50,
                   width: 120,
@@ -78,18 +78,18 @@ class InGameOverlay extends StatelessWidget {
                       ),
                       border: Border.all(color: Colors.white, width: 0)),
                   child: Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.transparent,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.alarm,
                           size: 30,
                           color: Colors.white,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 5,
                         ),
                         ValueListenableBuilder(
@@ -97,7 +97,7 @@ class InGameOverlay extends StatelessWidget {
                             builder: ((context, value, child) {
                               return Text(
                                 formatedTime(time: value),
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 20,
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600),
@@ -111,7 +111,7 @@ class InGameOverlay extends StatelessWidget {
           Align(
             alignment: Alignment.bottomCenter,
             child: Transform.translate(
-              offset: Offset(1, 4),
+              offset: const Offset(1, 4),
               child: Container(
                 height: 40,
                 width: 200,
@@ -128,14 +128,14 @@ class InGameOverlay extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text(
+                      const Text(
                         "Level",
                         style: TextStyle(
                             fontSize: 15,
                             color: Colors.white,
                             fontWeight: FontWeight.w600),
                       ),
-                      Text(
+                      const Text(
                         "1",
                         style: TextStyle(
                             fontSize: 15,

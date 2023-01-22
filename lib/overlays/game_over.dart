@@ -1,10 +1,8 @@
-import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fruitality/game/fruitality_game.dart';
 import 'package:fruitality/helpers/date_utils.dart';
 import 'package:fruitality/helpers/managers/game_manager.dart';
-import 'package:fruitality/helpers/num_utils.dart';
 import 'package:fruitality/widgets/game_button.dart';
 import 'package:fruitality/widgets/game_overlay_card.dart';
 import 'package:fruitality/widgets/horizontal_line_text.dart';
@@ -15,7 +13,7 @@ class GameOverOverlay extends StatelessWidget {
 
   FruitaLityGame game;
 
-  final textStyle = GoogleFonts.rancho(fontSize: 40, fontWeight: FontWeight.w600, color: Color(0xFF151515));
+  final textStyle = GoogleFonts.rancho(fontSize: 40, fontWeight: FontWeight.w600, color: const Color(0xFF151515));
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +28,7 @@ class GameOverOverlay extends StatelessWidget {
               height: 5,
             ),
             _getWinOrLooseBlock(),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Container(
@@ -39,7 +37,7 @@ class GameOverOverlay extends StatelessWidget {
               decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Color(0xFFC2C2C2), width: 1)),
+                  border: Border.all(color: const Color(0xFFC2C2C2), width: 1)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -48,33 +46,33 @@ class GameOverOverlay extends StatelessWidget {
                     children: [
                       SvgPicture.asset(
                         "assets/images/fruit_generic.svg",
-                        color: Color(0xFF494949),
+                        color: const Color(0xFF494949),
                         width: 30,
                         height: 25,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 5,
                       ),
                       Text(
                         game.gameManager.fruits.value.toString(),
-                        style: TextStyle(fontSize: 20, color: Color(0xFF494949), fontWeight: FontWeight.w600),
+                        style: const TextStyle(fontSize: 20, color: Color(0xFF494949), fontWeight: FontWeight.w600),
                       )
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.alarm,
                         size: 30,
                         color: Color(0xFF494949),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 5,
                       ),
                       Text(
                         formatedTime(time: game.gameManager.elapsedSecs.value),
-                        style: TextStyle(fontSize: 20, color: Color(0xFF494949), fontWeight: FontWeight.w600),
+                        style: const TextStyle(fontSize: 20, color: Color(0xFF494949), fontWeight: FontWeight.w600),
                       )
                     ],
                   )
@@ -111,7 +109,7 @@ class GameOverOverlay extends StatelessWidget {
               "assets/images/dino_dancing.png",
               width: 65,
             ),
-            SizedBox(
+            const SizedBox(
               width: 15,
             ),
             Text(
@@ -129,7 +127,7 @@ class GameOverOverlay extends StatelessWidget {
               "assets/images/dino_crying.png",
               width: 65,
             ),
-            SizedBox(
+            const SizedBox(
               width: 15,
             ),
             Text(
@@ -147,7 +145,7 @@ class GameOverOverlay extends StatelessWidget {
               "assets/images/dino_dancing.png",
               width: 65,
             ),
-            SizedBox(
+            const SizedBox(
               width: 15,
             ),
             Text(

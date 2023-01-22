@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:fruitality/game/fruitality_game.dart';
 import 'package:fruitality/overlays/debug_overlay.dart';
 
-import '../helpers/direction.dart';
-import '../helpers/joypad.dart';
 import '../overlays/game_over.dart';
 import '../overlays/game_pause.dart';
 import '../overlays/game_start.dart';

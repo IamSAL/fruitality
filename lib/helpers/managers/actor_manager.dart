@@ -4,8 +4,6 @@
 
 import 'package:flame/components.dart';
 import 'package:flame/input.dart';
-import 'package:flame_forge2d/flame_forge2d.dart';
-import 'package:flutter/material.dart';
 import 'package:fruitality/game/fruitality_game.dart';
 import 'package:fruitality/helpers/constants.dart';
 
@@ -33,8 +31,8 @@ class ActorManager extends Component with HasGameRef<FruitaLityGame> {
   @override
   void onLoad() {
     super.onLoad();
-    fps.position = Vector2(12, game.camera.canvasSize!.y - 35);
-    totalBodies.position = Vector2(12, game.camera.canvasSize!.y - 50);
+    fps.position = Vector2(12, game.camera.canvasSize.y - 35);
+    totalBodies.position = Vector2(12, game.camera.canvasSize.y - 50);
     if (game.children.contains(fps)) fps.removeFromParent();
     if (game.children.contains(totalBodies)) totalBodies.removeFromParent();
     //HUDs must be direct child of game.

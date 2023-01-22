@@ -19,7 +19,7 @@ class GamePauseOverlay extends StatelessWidget {
     );
 
     return BackdropFilter(
-      filter: new ImageFilter.blur(sigmaX: 2.5, sigmaY: 2.5),
+      filter: ImageFilter.blur(sigmaX: 2.5, sigmaY: 2.5),
       child: Container(
         color: Colors.transparent,
         child: Stack(

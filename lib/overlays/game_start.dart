@@ -1,8 +1,6 @@
-import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fruitality/game/fruitality_game.dart';
-import 'package:fruitality/helpers/num_utils.dart';
 import 'package:fruitality/widgets/game_button.dart';
 import 'package:fruitality/widgets/game_overlay_card.dart';
 import 'package:fruitality/widgets/horizontal_line_text.dart';

@@ -1,9 +1,6 @@
-import 'dart:ui';
 
 import 'package:flame_forge2d/flame_forge2d.dart' hide Transform;
 import 'package:flutter/material.dart';
-import 'package:fruitality/widgets/game_button.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../game/fruitality_game.dart';
 

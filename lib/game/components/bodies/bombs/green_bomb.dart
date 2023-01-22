@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:fruitality/game/components/bodies/bombs/bomb.dart';
 
-import 'package:fruitality/game/components/bodies/fruits/fruit.dart';
 import 'package:fruitality/game/components/bodies/player.dart';
 
 enum PoisonBombState { only }
