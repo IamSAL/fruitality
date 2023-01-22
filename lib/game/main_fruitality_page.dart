@@ -18,8 +18,6 @@ class MainFruitalityPage extends StatefulWidget {
 }
 
 class _MainFruitalityPageState extends State<MainFruitalityPage> {
-  FruitaLityGame _fruitaLityGame = FruitaLityGame();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,9 +30,11 @@ class _MainFruitalityPageState extends State<MainFruitalityPage> {
                 repeat: ImageRepeat.repeatX),
           ),
           child: GameWidget(
-            game: _fruitaLityGame,
-            overlayBuilderMap: <String, Widget Function(BuildContext, FruitaLityGame)>{
-              'startMenuOverlay': (context, game) => GameStartMenuOverlay(game: game),
+            game: FruitaLityGame(),
+            overlayBuilderMap: <String,
+                Widget Function(BuildContext, FruitaLityGame)>{
+              'startMenuOverlay': (context, game) =>
+                  GameStartMenuOverlay(game: game),
               'pauseMenuOverlay': (context, game) => GamePauseOverlay(
                     game: game,
                   ),

@@ -23,7 +23,9 @@ final Random _rand = Random();
 
 class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
   ObjectManager(
-      {this.minVerticalDistanceToNextObject = 150, this.maxVerticalDistanceToNextObject = 1000, super.priority = 1});
+      {this.minVerticalDistanceToNextObject = 150,
+      this.maxVerticalDistanceToNextObject = 1000,
+      super.priority = 1});
 
   double maxVerticalDistanceToNextObject;
   double minVerticalDistanceToNextObject;
@@ -45,7 +47,8 @@ class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
 
     //add some random fruits
     _commonFruits.addAll(List.generate(250, (index) {
-      Fruit fruit = _semiRandomFruit(Vector2(_generateNextX(), _generateNextY()));
+      Fruit fruit =
+          _semiRandomFruit(Vector2(_generateNextX(), _generateNextY()));
       add(fruit);
       return fruit;
     }));
@@ -152,11 +155,13 @@ class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
   }
 
   Fruit _semiRandomFruit(Vector2 position) {
-    if (specialItems['special_fruit'] == true && probGen.generateWithProbability(15)) {
+    if (specialItems['special_fruit'] == true &&
+        probGen.generateWithProbability(15)) {
       return SpecialFruit(position: position);
     }
 
-    if (specialItems['special_fruit'] == true && probGen.generateWithProbability(5)) {
+    if (specialItems['special_fruit'] == true &&
+        probGen.generateWithProbability(5)) {
       return PoisonFruit(position: position);
     }
 
@@ -185,13 +190,15 @@ class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
   }
 
   void _maybeAddBoosters() {
-    if (specialItems['noogler'] == true && probGen.generateWithProbability(20)) {
+    if (specialItems['noogler'] == true &&
+        probGen.generateWithProbability(20)) {
       var nooglerHat = NooglerHat(
         position: Vector2(_generateNextX(), _generateNextY()),
       );
       add(nooglerHat);
       _boosters.add(nooglerHat);
-    } else if (specialItems['rocket'] == true && probGen.generateWithProbability(15)) {
+    } else if (specialItems['rocket'] == true &&
+        probGen.generateWithProbability(15)) {
       var rocket = Rocket(
         position: Vector2(_generateNextX(), _generateNextY()),
       );

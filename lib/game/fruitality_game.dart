@@ -10,8 +10,6 @@ import 'package:flame/palette.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fruitality/game/components/bodies/bombs/green_bomb.dart';
-import 'package:fruitality/game/components/bodies/fruits/common_fruit.dart';
 
 import 'package:fruitality/game/components/grid_image.dart';
 
@@ -33,23 +31,15 @@ class FruitaLityGame extends Forge2DGame
         KeyboardEvents,
         MouseMovementDetector,
         MultiTouchDragDetector {
-  late PlayerBody player;
-  late TextComponent totalBodies;
-  final MovingParallax overlayParallax = MovingParallax();
-  final LevelManager levelManager = LevelManager();
-  final GameManager gameManager = GameManager();
-  final ActorManager actorManager = ActorManager();
-  int screenBufferSpace = 300;
-  ObjectManager objectManager = ObjectManager();
-
   FruitaLityGame() : super(zoom: 1, gravity: Vector2(0, 0));
 
-  @override
-  bool get debugMode => false;
-
-  void onJoypadDirectionChanged(Direction direction) {
-    player.direction = direction;
-  }
+  ActorManager actorManager = ActorManager();
+  GameManager gameManager = GameManager();
+  LevelManager levelManager = LevelManager();
+  ObjectManager objectManager = ObjectManager();
+  final MovingParallax overlayParallax = MovingParallax();
+  late PlayerBody player;
+  int screenBufferSpace = 300;
 
   @override
   Color backgroundColor() {
@@ -58,53 +48,22 @@ class FruitaLityGame extends Forge2DGame
   }
 
   @override
-  Future<void> onLoad() async {
-    await super.onLoad();
-
-    await add(gameManager);
-    overlays.add('startMenuOverlay');
-    await add(levelManager);
-    add(overlayParallax);
-    add(actorManager);
-  }
+  bool get debugMode => false;
 
   @override
-  void update(double dt) {
-    super.update(dt);
-
-    if (gameManager.isGameOver) {
-      return;
-    }
-
-    if (gameManager.isIntro) {
-      overlays.add('startMenuOverlay');
-      return;
-    }
-
-    if (gameManager.isPlaying) {
-      totalBodies.text = 'Bodies: ${world.bodies.length}';
-      checkLevelUp();
-    }
+  void onDragEnd(int pointerId, DragEndInfo info) {
+    print("dragging end");
+    actorManager.hideJoyPad();
+    super.onDragEnd(pointerId, info);
   }
 
-  // @override
-  // void onTapDown(int pointerId, TapDownInfo info) {
-  //   super.onTapDown(pointerId, info);
-  //   actorManager.moveToPointerDirector(info.eventPosition);
-  //   print(info.eventPosition.game);
-  //   print(info);
-  // }
   @override
   bool onDragUpdate(int pointerId, DragUpdateInfo details) {
+    super.onDragUpdate(pointerId, details);
+    print("dragging update");
     actorManager.moveToPointerDirector(details.eventPosition);
-    gameManager.pointerPosition.value = details.eventPosition.global;
-    return false;
-  }
 
-  @override
-  void onMouseMove(PointerHoverInfo info) {
-    actorManager.moveToPointerDirector(info.eventPosition);
-    super.onMouseMove(info);
+    return true;
   }
 
   @override
@@ -132,6 +91,58 @@ class FruitaLityGame extends Forge2DGame
     return super.onKeyEvent(event, keysPressed);
   }
 
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+
+    await add(gameManager);
+    overlays.add('startMenuOverlay');
+    await add(levelManager);
+    add(overlayParallax);
+    add(actorManager);
+  }
+
+  @override
+  void onMouseMove(PointerHoverInfo info) {
+    actorManager.moveToPointerDirector(info.eventPosition);
+    super.onMouseMove(info);
+  }
+
+  @override
+  void onTapDown(int pointerId, TapDownInfo info) {
+    super.onTapDown(pointerId, info);
+    actorManager.moveToPointerDirector(info.eventPosition);
+    gameManager.pointerPosition.value = info.eventPosition.global;
+  }
+
+  @override
+  void onTapUp(int pointerId, TapUpInfo info) {
+    actorManager.hideJoyPad();
+    super.onTapUp(pointerId, info);
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+
+    if (gameManager.isGameOver) {
+      return;
+    }
+
+    if (gameManager.isIntro) {
+      overlays.add('startMenuOverlay');
+      return;
+    }
+
+    if (gameManager.isPlaying) {
+      checkLevelUp();
+    }
+  }
+
+  void onJoypadDirectionChanged(Direction direction) {
+    player.direction = direction;
+  }
+
   void zoomOut() {
     double newZoom = camera.zoom - 0.1;
     if (newZoom > 0.25) {
@@ -146,50 +157,48 @@ class FruitaLityGame extends Forge2DGame
   void initializeGameStart() {
     setCharacter();
 
-    gameManager.reset();
-
     if (children.contains(objectManager)) objectManager.removeFromParent();
+    if (children.contains(gameManager)) gameManager.removeFromParent();
+    if (children.contains(levelManager)) levelManager.removeFromParent();
+    if (children.contains(actorManager)) actorManager.removeFromParent();
     if (children.contains(player)) player.removeFromParent();
 
+    objectManager = ObjectManager(
+        minVerticalDistanceToNextObject: levelManager.minDistance,
+        maxVerticalDistanceToNextObject: levelManager.maxDistance);
+
+    gameManager = GameManager();
+    levelManager = LevelManager();
+    actorManager = ActorManager();
+
+    final GridImageBackground gridImageBackground = GridImageBackground();
+    gridImageBackground.removeFromParent();
+
+    add(gridImageBackground);
+    add(objectManager);
+    add(gameManager);
+    add(levelManager);
+    add(actorManager);
     add(player);
+
     player.mounted.whenComplete(() {
       camera.followBodyComponent(player,
           worldBounds: Rect.fromLTRB(
               0, 0, Constants.WORLD_SIZE.x, Constants.WORLD_SIZE.y));
       player.body.applyLinearImpulse(Vector2.all(550));
     });
-    levelManager.reset();
-
-    objectManager = ObjectManager(
-        minVerticalDistanceToNextObject: levelManager.minDistance,
-        maxVerticalDistanceToNextObject: levelManager.maxDistance);
-
-    add(objectManager);
 
     objectManager.configure(levelManager.level, levelManager.difficulty);
-    totalBodies = TextComponent(scale: Vector2.all(0.5))
-      ..positionType = PositionType.viewport;
-    totalBodies.position = Vector2(12, size.y - 50);
-    final fps = FpsTextComponent(
-        position: Vector2(12, size.y - 35), scale: Vector2.all(0.5))
-      ..positionType = PositionType.viewport;
+
     final paint = BasicPalette.red.paint()..style = PaintingStyle.stroke;
     final circle = CircleComponent(
         radius: 50.0, position: Constants.WORLD_SIZE / 2, paint: paint);
     circle.removeFromParent();
-    final GridImageBackground gridImageBackground = GridImageBackground();
-    gridImageBackground.removeFromParent();
-    fps.removeFromParent();
-    totalBodies.removeFromParent();
-    // player.position = gridImageBackground.size;
+
     add(circle);
 
-    add(gridImageBackground);
-
-    add(fps);
-    add(totalBodies);
-
     add(WorldBorder());
+
     camera.zoom = 0.7;
   }
 

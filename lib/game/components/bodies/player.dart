@@ -15,7 +15,8 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
   Vector2 position = Constants.WORLD_SIZE / 2;
   late Vector2 size;
   Character character;
-
+  late Body groundBody;
+  MouseJoint? mouseJoint;
   PlayerBody({
     Vector2? position,
     required this.character,
@@ -35,6 +36,7 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
   Future<void> onLoad() async {
     await super.onLoad();
     // await loadSprite("default_player.png");
+    groundBody = game.world.createBody(BodyDef());
     priority = 2;
     renderBody = false;
     final sprite = await gameRef.loadSprite("default_player.png");
@@ -66,6 +68,26 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
       type: BodyType.dynamic,
     );
     return world.createBody(bodyDef)..createFixture(fixtureDef);
+  }
+
+  void moveTo(Vector2 position) {
+    if (!game.gameManager.isPlaying) return;
+
+    final mouseJointDef = MouseJointDef()
+      ..maxForce = 10000 * (game.player.body.mass + 1) * 10
+      ..dampingRatio = 0.1
+      ..frequencyHz = 5
+      ..target.setFrom(game.player.body.position)
+      ..collideConnected = false
+      ..bodyA = groundBody
+      ..bodyB = body;
+
+    mouseJoint ??= MouseJoint(mouseJointDef);
+    game.world.createJoint(mouseJoint!);
+
+    mouseJoint?.setTarget(position);
+    print("moved player to");
+    print(position);
   }
 
   void moveUp(double delta) {

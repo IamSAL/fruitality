@@ -5,6 +5,7 @@
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:fruitality/game/fruitality_game.dart';
+import 'package:fruitality/helpers/constants.dart';
 
 enum Character { rabbit, dino }
 
@@ -22,7 +23,8 @@ class GameManager extends Component with HasGameRef<FruitaLityGame> {
   Character character = Character.rabbit;
   ValueNotifier<int> fruits = ValueNotifier(0);
   ValueNotifier<int> elapsedSecs = ValueNotifier(0);
-  ValueNotifier<Vector2> pointerPosition = ValueNotifier(Vector2(0, 0));
+  ValueNotifier<Vector2> pointerPosition =
+      ValueNotifier(Constants.JOYPAD_POSITION);
   late Timer interval;
   GameResult result = GameResult.unknown;
   GameState state = GameState.intro;
@@ -34,6 +36,7 @@ class GameManager extends Component with HasGameRef<FruitaLityGame> {
   bool get isIntro => state == GameState.intro;
 
   void reset() {
+    interval.reset();
     elapsedSecs.value = 0;
 
     fruits.value = 0;
