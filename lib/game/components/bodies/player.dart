@@ -1,7 +1,9 @@
+import 'dart:math';
 
 import 'package:flame/components.dart';
 
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:fruitality/game/components/bodies/player_container.dart';
 import 'package:fruitality/game/fruitality_game.dart';
 
 import '../../../helpers/constants.dart';
@@ -16,6 +18,7 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
   Character character;
   late Body groundBody;
   MouseJoint? mouseJoint;
+  PlayerContainer playerContainer = PlayerContainer();
   PlayerBody({
     Vector2? position,
     required this.character,
@@ -34,11 +37,11 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    // await loadSprite("default_player.png");
     groundBody = game.world.createBody(BodyDef());
     priority = 2;
     renderBody = false;
     final sprite = await gameRef.loadSprite("default_player.png");
+    add(playerContainer);
     add(
       SpriteComponent(
         sprite: sprite,
@@ -46,8 +49,6 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
         anchor: Anchor.center,
       ),
     );
-
-    //add(PlayerSpriteComponent());
   }
 
   @override
@@ -85,54 +86,18 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
     game.world.createJoint(mouseJoint!);
 
     mouseJoint?.setTarget(position);
-    print("moved player to");
-    print(position);
-  }
-
-  void moveUp(double delta) {
-    body.linearVelocity = Vector2(0, -(delta)) * jumpSpeed;
-  }
-
-  void moveDown(double delta) {
-    body.linearVelocity = Vector2(0, delta) * jumpSpeed;
-  }
-
-  void moveLeft(double delta) {
-    //body.applyLinearImpulse(Vector2(-(delta ), 0));
-    body.linearVelocity = Vector2(-(delta), 0) * jumpSpeed;
-  }
-
-  void moveRight(double delta) {
-    //body.applyForce(Vector2(delta , 0));
-    body.linearVelocity = Vector2(delta, 0) * jumpSpeed;
-  }
-
-  void movePlayer(double delta) {
-    if (direction != Direction.none) {}
-    switch (direction) {
-      case Direction.up:
-        moveUp(delta);
-
-        break;
-      case Direction.down:
-        moveDown(delta);
-        break;
-      case Direction.left:
-        moveLeft(delta);
-        break;
-      case Direction.right:
-        moveRight(delta);
-        break;
-      case Direction.none:
-        break;
-    }
   }
 
   @override
   void update(double dt) {
     if (gameRef.gameManager.isIntro || gameRef.gameManager.isGameOver) return;
     super.update(dt);
-
-    movePlayer(dt);
+    if (body.linearVelocity.isZero()) {
+      playerContainer.opacity = 0;
+    } else {
+      playerContainer.opacity = 1;
+      playerContainer.angle += 2 * pi * dt;
+    }
+    print(playerContainer.angle);
   }
 }

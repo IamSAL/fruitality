@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 
-
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
@@ -51,7 +50,6 @@ class FruitaLityGame extends Forge2DGame
 
   @override
   void onDragEnd(int pointerId, DragEndInfo info) {
-    print("dragging end");
     actorManager.hideJoyPad();
     super.onDragEnd(pointerId, info);
   }
@@ -59,7 +57,6 @@ class FruitaLityGame extends Forge2DGame
   @override
   bool onDragUpdate(int pointerId, DragUpdateInfo details) {
     super.onDragUpdate(pointerId, details);
-    print("dragging update");
     actorManager.moveToPointerDirector(details.eventPosition);
 
     return true;

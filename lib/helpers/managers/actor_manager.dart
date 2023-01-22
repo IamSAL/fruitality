@@ -12,14 +12,12 @@ enum activeActors { player, power, bot }
 class ActorManager extends Component with HasGameRef<FruitaLityGame> {
   ActorManager();
 
-  final fps = FpsTextComponent(scale: Vector2.all(0.5), priority: 5)
+  final fps = FpsTextComponent(scale: Vector2.all(0.5))
     ..positionType = PositionType.viewport;
 
-  final totalBodies = TextComponent(scale: Vector2.all(0.5), priority: 5)
+  final totalBodies = TextComponent(scale: Vector2.all(0.5))
     ..positionType = PositionType.viewport;
 
-  @override
-  int get priority => 5;
   void moveToPointerDirector(EventPosition eventPosition) {
     game.player.moveTo(eventPosition.game);
   }
