@@ -6,6 +6,7 @@ import 'package:flame/game.dart';
 
 import 'package:flame/palette.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -29,7 +30,7 @@ class FruitaLityGame extends Forge2DGame
         KeyboardEvents,
         MouseMovementDetector,
         MultiTouchDragDetector {
-  FruitaLityGame() : super(zoom: 100, gravity: Vector2(0, 0));
+  FruitaLityGame() : super(zoom: kIsWeb ? 100 : 80, gravity: Vector2(0, 0));
 
   ActorManager actorManager = ActorManager();
   GameManager gameManager = GameManager();

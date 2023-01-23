@@ -50,7 +50,7 @@ class PlayerBodyTest extends BodyComponent<TestGame> {
   Future<void> onLoad() async {
     await super.onLoad();
     groundBody = game.world.createBody(BodyDef());
-    renderBody = true;
+    renderBody = false;
     final sprite = await gameRef.loadSprite("default_player.png");
 
     add(

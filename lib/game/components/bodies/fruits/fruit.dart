@@ -16,14 +16,14 @@ class Fruit<T> extends BodyComponent<FruitaLityGame> with ContactCallbacks {
     final fixtureDef = FixtureDef(
       shape,
       userData: this, // To be able to determine object in collision
-      restitution: 0.01,
+      restitution: 0,
       density: 5,
-      friction: .25,
+      friction: 0,
     );
 
     final bodyDef = BodyDef(
       position: position,
-      type: BodyType.static,
+      type: BodyType.dynamic,
     );
     return world.createBody(bodyDef)..createFixture(fixtureDef);
   }

@@ -30,7 +30,7 @@ class CommonFruit extends Fruit<CommonFruitState> {
     final sprites = {
       CommonFruitState.only: await gameRef.loadSprite('game/$randSprite.png')
     };
-    renderBody = true;
+    renderBody = false;
     currentState = CommonFruitState.only;
 
     add(
@@ -52,7 +52,8 @@ class CommonFruit extends Fruit<CommonFruitState> {
     }
 
     if (other is Fruit) {
-      body.applyLinearImpulse(Vector2(250, 250));
+      body.applyLinearImpulse(Vector2(0.05, 0.05));
+      other.body.applyLinearImpulse(Vector2(-0.05, -0.05));
     }
   }
 }

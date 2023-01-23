@@ -1,5 +1,5 @@
-
 import 'package:flame_forge2d/flame_forge2d.dart' hide Transform;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../game/fruitality_game.dart';
@@ -75,18 +75,26 @@ class DebugOverlay extends StatelessWidget {
                               )),
                           IconButton(
                               onPressed: () {
-                                game.player.body.linearVelocity =
-                                    Vector2.all(0);
+                                game.camera.zoom = kIsWeb ? 100 : 80;
                               },
                               icon: const Icon(
-                                Icons.stop_circle,
+                                Icons.fullscreen,
                                 color: Colors.white,
                               )),
                           IconButton(
                               onPressed: () {
-                                game.camera.shake(duration: 1, intensity: 5);
+                                game.camera.zoom = 10;
+                              },
+                              icon: const Icon(
+                                Icons.fullscreen_exit,
+                                color: Colors.white,
+                              )),
+                          IconButton(
+                              onPressed: () {
+                                game.camera
+                                    .shake(duration: 1, intensity: 0.025);
                                 game.player.body
-                                    .applyLinearImpulse(Vector2.all(550));
+                                    .applyLinearImpulse(Vector2.all(2));
                               },
                               icon: const Icon(
                                 Icons.fast_forward,

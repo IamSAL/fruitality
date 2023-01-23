@@ -12,7 +12,7 @@ class WorldBorder extends BodyComponent {
   Future<void> onLoad() async {
     await super.onLoad();
     priority = 2;
-    renderBody = true;
+    renderBody = false;
 
     //add(PlayerSpriteComponent());
   }

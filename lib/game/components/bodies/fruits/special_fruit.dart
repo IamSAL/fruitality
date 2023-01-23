@@ -26,13 +26,13 @@ class SpecialFruit extends Fruit<SpecialFruitState> with Tappable {
     final sprites = {
       SpecialFruitState.only: await gameRef.loadSprite('game/$randSprite.png')
     };
-    renderBody = true;
+    renderBody = false;
     currentState = SpecialFruitState.only;
 
     add(
       SpriteComponent(
           sprite: sprites[currentState],
-          size: spriteOptions[randSprite],
+          size: spriteOptions[randSprite]! * 2,
           anchor: Anchor.center,
           priority: 1),
     );

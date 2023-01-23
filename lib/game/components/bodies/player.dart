@@ -36,9 +36,9 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
     final fixtureDef = FixtureDef(
       shape,
       userData: this, // To be able to determine object in collision
-      restitution: 0.01,
+      restitution: 0.0,
       density: 5,
-      friction: .25,
+      friction: 0,
     );
 
     final bodyDef = BodyDef(
@@ -53,14 +53,14 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
     await super.onLoad();
     groundBody = game.world.createBody(BodyDef());
     priority = 2;
-    renderBody = true;
+    renderBody = false;
     final sprite = await gameRef.loadSprite("default_player.png");
     // add(playerContainer);
     // playerContainer.lookAt(targetPosition);
     add(
       SpriteComponent(
         sprite: sprite,
-        size: size * 2,
+        size: size * 2.3,
         anchor: Anchor.center,
       ),
     );

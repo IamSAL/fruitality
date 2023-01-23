@@ -26,13 +26,13 @@ class PoisonFruit extends Fruit<PoisonFruitState> with Tappable {
     final sprites = {
       PoisonFruitState.only: await gameRef.loadSprite('game/$randSprite.png')
     };
-    renderBody = true;
+    renderBody = false;
     currentState = PoisonFruitState.only;
 
     add(
       SpriteComponent(
         sprite: sprites[currentState],
-        size: spriteOptions[randSprite],
+        size: spriteOptions[randSprite]! * 2,
         anchor: Anchor.center,
       ),
     );

@@ -23,7 +23,7 @@ class PoisonBomb extends Bomb<PoisonBombState> with Tappable {
     var randSpriteIndex = Random().nextInt(spriteOptions.length);
 
     String randSprite = spriteOptions.keys.elementAt(randSpriteIndex);
-    renderBody = true;
+    renderBody = false;
     final sprites = {
       PoisonBombState.only: await gameRef.loadSprite('game/$randSprite.png')
     };
@@ -33,7 +33,7 @@ class PoisonBomb extends Bomb<PoisonBombState> with Tappable {
     add(
       SpriteComponent(
           sprite: sprites[currentState],
-          size: spriteOptions[randSprite]!,
+          size: spriteOptions[randSprite]! * 2,
           anchor: Anchor.center,
           priority: 1),
     );
