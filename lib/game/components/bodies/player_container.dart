@@ -8,14 +8,14 @@ class PlayerContainer extends SpriteComponent with HasGameRef<FruitaLityGame> {
     size = gameRef.player.size;
     position = Vector2(position.x, position.y - 3);
     anchor = Anchor.center;
-
     final arrowImage = await gameRef.loadSprite('arrow_head.png');
-    final playerArrow = SpriteComponent(
-      size: Vector2.all(24),
-      sprite: arrowImage,
-      position: Vector2(position.x + 40, position.y - 20),
-    );
-    add(playerArrow);
+    // final playerArrow = SpriteComponent(
+    //   size: Vector2.all(24),
+    //   sprite: arrowImage,
+    //   anchor: Anchor.center,
+    //   position: Vector2(position.x + 50, position.y - 20),
+    // );
+    // add(playerArrow);
   }
 
   @override

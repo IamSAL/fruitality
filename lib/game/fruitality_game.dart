@@ -24,11 +24,7 @@ import '../helpers/managers/managers.dart';
 import 'components/bodies/player.dart';
 
 class FruitaLityGame extends Forge2DGame
-    with
-        HasTappables,
-        KeyboardEvents,
-        MouseMovementDetector,
-        MultiTouchDragDetector {
+    with HasTappables, KeyboardEvents, MouseMovementDetector, MultiTouchDragDetector {
   FruitaLityGame() : super(zoom: 1, gravity: Vector2(0, 0));
 
   ActorManager actorManager = ActorManager();
@@ -63,8 +59,7 @@ class FruitaLityGame extends Forge2DGame
   }
 
   @override
-  KeyEventResult onKeyEvent(
-      RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+  KeyEventResult onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     final isKeyDown = event is RawKeyDownEvent;
     Direction? keyDirection;
 
@@ -179,16 +174,13 @@ class FruitaLityGame extends Forge2DGame
 
     player.mounted.whenComplete(() {
       camera.followBodyComponent(player,
-          worldBounds: Rect.fromLTRB(
-              0, 0, Constants.WORLD_SIZE.x, Constants.WORLD_SIZE.y));
-      player.body.applyLinearImpulse(Vector2.all(550));
+          worldBounds: Rect.fromLTRB(0, 0, Constants.WORLD_SIZE.x, Constants.WORLD_SIZE.y));
     });
 
     objectManager.configure(levelManager.level, levelManager.difficulty);
 
     final paint = BasicPalette.red.paint()..style = PaintingStyle.stroke;
-    final circle = CircleComponent(
-        radius: 50.0, position: Constants.WORLD_SIZE / 2, paint: paint);
+    final circle = CircleComponent(radius: 50.0, position: Constants.WORLD_SIZE / 2, paint: paint);
     circle.removeFromParent();
 
     add(circle);

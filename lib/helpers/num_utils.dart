@@ -4,6 +4,8 @@
 
 import 'dart:math';
 
+import 'package:flame/components.dart';
+
 class Range {
   final double start;
   final double end;
@@ -44,4 +46,12 @@ class ProbabilityGenerator {
 
 extension PercentOf on num {
   double percent(num other) => this * other / 100;
+}
+
+double angleBetweenVectors(Vector2 vec1, Vector2 vec2) {
+  double dotProduct = vec1.x * vec2.x + vec1.y * vec2.y;
+  double crossProduct = vec1.x * vec2.y - vec1.y * vec2.x;
+  double angle = atan2(crossProduct, dotProduct) * (180 / pi);
+  print("$vec1 $vec2 angle $angle");
+  return angle;
 }
