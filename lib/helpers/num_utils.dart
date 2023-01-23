@@ -49,9 +49,12 @@ extension PercentOf on num {
 }
 
 double angleBetweenVectors(Vector2 vec1, Vector2 vec2) {
-  double dotProduct = vec1.x * vec2.x + vec1.y * vec2.y;
-  double crossProduct = vec1.x * vec2.y - vec1.y * vec2.x;
-  double angle = atan2(crossProduct, dotProduct) * (180 / pi);
-  print("$vec1 $vec2 angle $angle");
-  return angle;
+  var vector1 = [vec1.x, vec1.y];
+  var vector2 = [vec2.x, vec2.y];
+
+  double angleRad = atan2(vector2[1], vector2[0]) - atan2(vector1[1], vector1[0]);
+
+  double angleDeg = angleRad * (180 / pi);
+  //print("$vec1 $vec2 angle ${angleRad} : $angleDeg");
+  return angleDeg;
 }
