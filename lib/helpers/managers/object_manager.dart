@@ -69,7 +69,7 @@ class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
       removeObjectsMarkedForRemoval();
     }
     //max 5 items per second & max 500 items alive at once;
-    if (probGen.generateWithProbability(10) && _commonFruits.length < 1000) {
+    if (probGen.generateWithProbability(10) && _commonFruits.length < 400) {
       var newPlatY = _generateNextY();
       var newPlatX = _generateNextX();
       final nextPlat = _semiRandomFruit(Vector2(newPlatX, newPlatY));

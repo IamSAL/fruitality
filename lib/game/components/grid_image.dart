@@ -6,7 +6,7 @@ class GridImageBackground extends SpriteComponent with HasGameRef {
     position = Vector2(0, 0);
     sprite = await gameRef.loadSprite("bg_grid.png");
     size = sprite!.originalSize;
-
+    scale = Vector2.all(0.01);
     return super.onLoad();
   }
 }

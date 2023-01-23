@@ -1,4 +1,3 @@
-
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:fruitality/helpers/constants.dart';
 
@@ -23,9 +22,9 @@ class WorldBorder extends BodyComponent {
     final shape = ChainShape();
     shape.createChain([
       Vector2(0, 0),
-      Vector2(0, 4080),
-      Vector2(7253, 4080),
-      Vector2(7253, 0),
+      Vector2(0, Constants.WORLD_SIZE.y),
+      Vector2(Constants.WORLD_SIZE.x, Constants.WORLD_SIZE.y),
+      Vector2(Constants.WORLD_SIZE.x, 0),
       Vector2(0, 0),
     ]);
 

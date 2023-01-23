@@ -1,9 +1,11 @@
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:fruitality/helpers/constants.dart';
 
 import '../../../fruitality_game.dart';
 import '../player.dart';
 
-abstract class Bomb<T> extends BodyComponent<FruitaLityGame> with ContactCallbacks {
+abstract class Bomb<T> extends BodyComponent<FruitaLityGame>
+    with ContactCallbacks {
   Vector2 position;
   T currentState;
 
@@ -11,14 +13,14 @@ abstract class Bomb<T> extends BodyComponent<FruitaLityGame> with ContactCallbac
 
   @override
   Body createBody() {
-    final shape = CircleShape()..radius = 50 / 3;
+    final shape = CircleShape()..radius = Constants.INIT_OBJECT_SIZE.x;
 
     final fixtureDef = FixtureDef(
       shape,
       userData: this, // To be able to determine object in collision
-      restitution: 0,
-      density: 0,
-      friction: 0,
+      restitution: 0.01,
+      density: 5,
+      friction: .25,
     );
 
     final bodyDef = BodyDef(

@@ -6,7 +6,7 @@ class PlayerContainer extends SpriteComponent with HasGameRef<FruitaLityGame> {
   void onLoad() async {
     sprite = await gameRef.loadSprite('player_container.png');
     size = gameRef.player.size;
-    position = Vector2(position.x, position.y - 3);
+    position = Vector2(position.x, position.y - 0.03);
     anchor = Anchor.center;
     final arrowImage = await gameRef.loadSprite('arrow_head.png');
     // final playerArrow = SpriteComponent(

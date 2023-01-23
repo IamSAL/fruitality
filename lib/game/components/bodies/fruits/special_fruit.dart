@@ -3,14 +3,15 @@ import 'dart:math';
 import 'package:flame/components.dart';
 
 import 'package:fruitality/game/components/bodies/fruits/fruit.dart';
+import 'package:fruitality/helpers/constants.dart';
 
 enum SpecialFruitState { only }
 
 class SpecialFruit extends Fruit<SpecialFruitState> with Tappable {
   final Map<String, Vector2> spriteOptions = {
-    'fruit_mango_special': Vector2(50, 50),
-    'fruit_pineapple_special': Vector2(50, 50),
-    'fruit_banana_special': Vector2(50, 50),
+    'fruit_mango_special': Constants.INIT_OBJECT_SIZE,
+    'fruit_pineapple_special': Constants.INIT_OBJECT_SIZE,
+    'fruit_banana_special': Constants.INIT_OBJECT_SIZE,
   };
   SpecialFruit({required super.position})
       : super(currentState: SpecialFruitState.only);
@@ -25,7 +26,7 @@ class SpecialFruit extends Fruit<SpecialFruitState> with Tappable {
     final sprites = {
       SpecialFruitState.only: await gameRef.loadSprite('game/$randSprite.png')
     };
-
+    renderBody = true;
     currentState = SpecialFruitState.only;
 
     add(

@@ -24,8 +24,12 @@ import '../helpers/managers/managers.dart';
 import 'components/bodies/player.dart';
 
 class FruitaLityGame extends Forge2DGame
-    with HasTappables, KeyboardEvents, MouseMovementDetector, MultiTouchDragDetector {
-  FruitaLityGame() : super(zoom: 1, gravity: Vector2(0, 0));
+    with
+        HasTappables,
+        KeyboardEvents,
+        MouseMovementDetector,
+        MultiTouchDragDetector {
+  FruitaLityGame() : super(zoom: 100, gravity: Vector2(0, 0));
 
   ActorManager actorManager = ActorManager();
   GameManager gameManager = GameManager();
@@ -33,7 +37,7 @@ class FruitaLityGame extends Forge2DGame
   ObjectManager objectManager = ObjectManager();
   final MovingParallax overlayParallax = MovingParallax();
   late PlayerBody player;
-  int screenBufferSpace = 300;
+  // int screenBufferSpace = 300;
 
   @override
   Color backgroundColor() {
@@ -59,7 +63,8 @@ class FruitaLityGame extends Forge2DGame
   }
 
   @override
-  KeyEventResult onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+  KeyEventResult onKeyEvent(
+      RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     final isKeyDown = event is RawKeyDownEvent;
     Direction? keyDirection;
 
@@ -135,14 +140,14 @@ class FruitaLityGame extends Forge2DGame
   }
 
   void zoomOut() {
-    double newZoom = camera.zoom - 0.1;
+    double newZoom = camera.zoom - 1;
     if (newZoom > 0.25) {
       camera.zoom = newZoom;
     }
   }
 
   void zoomIn() {
-    camera.zoom += 0.1;
+    camera.zoom += 1;
   }
 
   void initializeGameStart() {
@@ -174,20 +179,20 @@ class FruitaLityGame extends Forge2DGame
 
     player.mounted.whenComplete(() {
       camera.followBodyComponent(player,
-          worldBounds: Rect.fromLTRB(0, 0, Constants.WORLD_SIZE.x, Constants.WORLD_SIZE.y));
+          worldBounds: Rect.fromLTRB(
+              0, 0, Constants.WORLD_SIZE.x, Constants.WORLD_SIZE.y));
     });
 
     objectManager.configure(levelManager.level, levelManager.difficulty);
 
     final paint = BasicPalette.red.paint()..style = PaintingStyle.stroke;
-    final circle = CircleComponent(radius: 50.0, position: Constants.WORLD_SIZE / 2, paint: paint);
+    final circle = CircleComponent(
+        radius: 0.25, position: Constants.WORLD_SIZE / 2, paint: paint);
     circle.removeFromParent();
 
     add(circle);
 
     add(WorldBorder());
-
-    camera.zoom = 0.7;
   }
 
   void setCharacter() {

@@ -3,13 +3,14 @@ import 'dart:math';
 import 'package:flame/components.dart';
 
 import 'package:fruitality/game/components/bodies/fruits/fruit.dart';
+import 'package:fruitality/helpers/constants.dart';
 
 enum PoisonFruitState { only }
 
 class PoisonFruit extends Fruit<PoisonFruitState> with Tappable {
   final Map<String, Vector2> spriteOptions = {
-    'halloween_poison_fruit': Vector2(50, 50),
-    'sin_poison_fruit': Vector2(50, 50),
+    'halloween_poison_fruit': Constants.INIT_OBJECT_SIZE,
+    'sin_poison_fruit': Constants.INIT_OBJECT_SIZE,
   };
 
   PoisonFruit({required super.position})
@@ -25,7 +26,7 @@ class PoisonFruit extends Fruit<PoisonFruitState> with Tappable {
     final sprites = {
       PoisonFruitState.only: await gameRef.loadSprite('game/$randSprite.png')
     };
-
+    renderBody = true;
     currentState = PoisonFruitState.only;
 
     add(
