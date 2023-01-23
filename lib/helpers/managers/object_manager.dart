@@ -46,7 +46,7 @@ class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
     super.onMount();
 
     //add some random fruits
-    _commonFruits.addAll(List.generate(250, (index) {
+    _commonFruits.addAll(List.generate(1000, (index) {
       Fruit fruit =
           _semiRandomFruit(Vector2(_generateNextX(), _generateNextY()));
       add(fruit);
@@ -69,7 +69,7 @@ class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
       removeObjectsMarkedForRemoval();
     }
     //max 5 items per second & max 500 items alive at once;
-    if (probGen.generateWithProbability(10) && _commonFruits.length < 1000) {
+    if (probGen.generateWithProbability(10) && _commonFruits.length < 10000) {
       var newPlatY = _generateNextY();
       var newPlatX = _generateNextX();
       final nextPlat = _semiRandomFruit(Vector2(newPlatX, newPlatY));
@@ -80,7 +80,7 @@ class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
       _maybeAddBombs();
       // _maybeAddBoosters();
     }
-    if (_commonFruits.length > 250) {
+    if (_commonFruits.length > 2500) {
       _maybeRemoveFruits();
       _maybeAddBombs();
     }

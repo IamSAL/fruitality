@@ -14,7 +14,8 @@ final worldSize = Vector2(12.8, 7.2);
 
 class TestGame extends Forge2DGame with KeyboardEvents {
   // Keep track of the number of bodies in the world.
-  final totalBodies = TextComponent(position: Vector2(5, 690))..positionType = PositionType.viewport;
+  final totalBodies = TextComponent(position: Vector2(5, 690))
+    ..positionType = PositionType.viewport;
 
   // Keep track of the frames per second
   final fps = FpsTextComponent();

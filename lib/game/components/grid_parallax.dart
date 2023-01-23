@@ -6,7 +6,7 @@ class GridParallaxComponent extends ParallaxComponent {
   static final backgroundVelocity = Vector2(30.0, 0);
   static const framesPerSec = 60.0;
   static const threshold = 0.005;
-  double defaultScale = 1;
+  double defaultScale = 0.1;
   Vector2 lastCameraPosition = Vector2(0, 10);
   @override
   Future<void> onLoad() async {

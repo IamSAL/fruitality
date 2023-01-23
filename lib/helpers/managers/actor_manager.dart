@@ -12,10 +12,10 @@ enum activeActors { player, power, bot }
 class ActorManager extends Component with HasGameRef<FruitaLityGame> {
   ActorManager();
 
-  final fps = FpsTextComponent(scale: Vector2.all(0.5))
+  final fps = FpsTextComponent(scale: Vector2.all(10))
     ..positionType = PositionType.viewport;
 
-  final totalBodies = TextComponent(scale: Vector2.all(0.5))
+  final totalBodies = TextComponent(scale: Vector2.all(10))
     ..positionType = PositionType.viewport;
 
   void moveToPointerDirector(EventPosition eventPosition) {
@@ -29,12 +29,12 @@ class ActorManager extends Component with HasGameRef<FruitaLityGame> {
   @override
   void onLoad() {
     super.onLoad();
-    fps.position = Vector2(12, game.camera.canvasSize.y - 35);
-    totalBodies.position = Vector2(12, game.camera.canvasSize.y - 50);
+    fps.position = Vector2(1, game.camera.canvasSize.y);
+    totalBodies.position = Vector2(1, game.camera.canvasSize.y);
     if (game.children.contains(fps)) fps.removeFromParent();
     if (game.children.contains(totalBodies)) totalBodies.removeFromParent();
     //HUDs must be direct child of game.
-    game.add(fps);
+    // game.add(fps);
     game.add(totalBodies);
   }
 

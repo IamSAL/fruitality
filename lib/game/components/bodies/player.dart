@@ -17,7 +17,7 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
     required this.character,
     Vector2? size,
     double? jumpSpeed,
-  }) : size = size ?? Vector2(100, 100);
+  }) : size = size ?? Vector2(1, 1);
 
   Character character;
   Direction direction = Direction.none;
@@ -31,7 +31,7 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
 
   @override
   Body createBody() {
-    final shape = CircleShape()..radius = 100 / 2.35;
+    final shape = CircleShape()..radius = 1 / 2.35;
 
     final fixtureDef = FixtureDef(
       shape,
@@ -90,9 +90,9 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
     if (!game.gameManager.isPlaying) return;
 
     final mouseJointDef = MouseJointDef()
-      ..maxForce = 10000 * (game.player.body.mass + 1) * 10
-      ..dampingRatio = 0.1
-      ..frequencyHz = 5
+      ..maxForce = (game.player.body.mass + 1) * 2
+      ..dampingRatio = 0.01
+      ..frequencyHz = 0.01
       ..target.setFrom(game.player.body.position)
       ..collideConnected = false
       ..bodyA = groundBody

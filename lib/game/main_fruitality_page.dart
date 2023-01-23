@@ -28,9 +28,11 @@ class _MainFruitalityPageState extends State<MainFruitalityPage> {
                 repeat: ImageRepeat.repeatX),
           ),
           child: GameWidget(
-            game: FruitaLityGame(),
-            overlayBuilderMap: <String, Widget Function(BuildContext, FruitaLityGame)>{
-              'startMenuOverlay': (context, game) => GameStartMenuOverlay(game: game),
+            game: FruitaLityGame(deviceSize: MediaQuery.of(context).size),
+            overlayBuilderMap: <String,
+                Widget Function(BuildContext, FruitaLityGame)>{
+              'startMenuOverlay': (context, game) =>
+                  GameStartMenuOverlay(game: game),
               'pauseMenuOverlay': (context, game) => GamePauseOverlay(
                     game: game,
                   ),

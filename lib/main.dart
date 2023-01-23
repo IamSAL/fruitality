@@ -30,8 +30,8 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      //home: const MainFruitalityPage(),
-      home: const TestGamePage(),
+      home: const MainFruitalityPage(),
+      //home: const TestGamePage(),
     );
   }
 }

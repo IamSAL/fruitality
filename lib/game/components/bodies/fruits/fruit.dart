@@ -10,7 +10,7 @@ class Fruit<T> extends BodyComponent<FruitaLityGame> with ContactCallbacks {
 
   @override
   Body createBody() {
-    final shape = CircleShape()..radius = 50 / 3;
+    final shape = CircleShape()..radius = (50 / 3) / 10;
 
     final fixtureDef = FixtureDef(
       shape,

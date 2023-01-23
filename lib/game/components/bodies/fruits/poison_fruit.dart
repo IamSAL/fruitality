@@ -8,8 +8,8 @@ enum PoisonFruitState { only }
 
 class PoisonFruit extends Fruit<PoisonFruitState> with Tappable {
   final Map<String, Vector2> spriteOptions = {
-    'halloween_poison_fruit': Vector2(50, 50),
-    'sin_poison_fruit': Vector2(50, 50),
+    'halloween_poison_fruit': Vector2(50, 50) / 10,
+    'sin_poison_fruit': Vector2(50, 50) / 10,
   };
 
   PoisonFruit({required super.position})

@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:fruitality/game/components/grid_image.dart';
+import 'package:fruitality/game/components/grid_image_repeated.dart';
 
 import 'package:fruitality/game/components/moving_parallax.dart';
 
@@ -23,9 +24,18 @@ import '../helpers/managers/managers.dart';
 
 import 'components/bodies/player.dart';
 
+// Scaled viewport size
+final worldSize = Vector2(12.8, 7.2);
+
 class FruitaLityGame extends Forge2DGame
-    with HasTappables, KeyboardEvents, MouseMovementDetector, MultiTouchDragDetector {
-  FruitaLityGame() : super(zoom: 1, gravity: Vector2(0, 0));
+    with
+        HasTappables,
+        KeyboardEvents,
+        MouseMovementDetector,
+        MultiTouchDragDetector {
+  final Size deviceSize;
+  FruitaLityGame({required this.deviceSize})
+      : super(zoom: 100, gravity: Vector2(0, 0));
 
   ActorManager actorManager = ActorManager();
   GameManager gameManager = GameManager();
@@ -59,7 +69,8 @@ class FruitaLityGame extends Forge2DGame
   }
 
   @override
-  KeyEventResult onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+  KeyEventResult onKeyEvent(
+      RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     final isKeyDown = event is RawKeyDownEvent;
     Direction? keyDirection;
 
@@ -85,7 +96,8 @@ class FruitaLityGame extends Forge2DGame
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-
+    // camera.viewport =
+    //     FixedResolutionViewport(Vector2(deviceSize.width, deviceSize.height));
     await add(gameManager);
     overlays.add('startMenuOverlay');
     await add(levelManager);
@@ -135,14 +147,14 @@ class FruitaLityGame extends Forge2DGame
   }
 
   void zoomOut() {
-    double newZoom = camera.zoom - 0.1;
-    if (newZoom > 0.25) {
+    double newZoom = camera.zoom - 5;
+    if (newZoom > 0.5) {
       camera.zoom = newZoom;
     }
   }
 
   void zoomIn() {
-    camera.zoom += 0.1;
+    camera.zoom += 5;
   }
 
   void initializeGameStart() {
@@ -162,10 +174,14 @@ class FruitaLityGame extends Forge2DGame
     levelManager = LevelManager();
     actorManager = ActorManager();
 
-    final GridImageBackground gridImageBackground = GridImageBackground();
-    gridImageBackground.removeFromParent();
+    // final GridImageBackground gridImageBackground = GridImageBackground();
+    // gridImageBackground.removeFromParent();
+    // add(gridImageBackground);
 
-    add(gridImageBackground);
+    final GridImageRepeated gridImageRepeated = GridImageRepeated();
+    gridImageRepeated.removeFromParent();
+    add(gridImageRepeated);
+
     add(objectManager);
     add(gameManager);
     add(levelManager);
@@ -174,20 +190,20 @@ class FruitaLityGame extends Forge2DGame
 
     player.mounted.whenComplete(() {
       camera.followBodyComponent(player,
-          worldBounds: Rect.fromLTRB(0, 0, Constants.WORLD_SIZE.x, Constants.WORLD_SIZE.y));
+          worldBounds: Rect.fromLTRB(
+              0, 0, Constants.WORLD_SIZE.x, Constants.WORLD_SIZE.y));
     });
 
     objectManager.configure(levelManager.level, levelManager.difficulty);
 
     final paint = BasicPalette.red.paint()..style = PaintingStyle.stroke;
-    final circle = CircleComponent(radius: 50.0, position: Constants.WORLD_SIZE / 2, paint: paint);
+    final circle = CircleComponent(
+        radius: 5.0, position: Constants.WORLD_SIZE / 2, paint: paint);
     circle.removeFromParent();
 
     add(circle);
 
     add(WorldBorder());
-
-    camera.zoom = 0.7;
   }
 
   void setCharacter() {

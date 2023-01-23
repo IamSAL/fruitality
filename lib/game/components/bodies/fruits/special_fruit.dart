@@ -8,9 +8,9 @@ enum SpecialFruitState { only }
 
 class SpecialFruit extends Fruit<SpecialFruitState> with Tappable {
   final Map<String, Vector2> spriteOptions = {
-    'fruit_mango_special': Vector2(50, 50),
-    'fruit_pineapple_special': Vector2(50, 50),
-    'fruit_banana_special': Vector2(50, 50),
+    'fruit_mango_special': Vector2(50, 50) / 10,
+    'fruit_pineapple_special': Vector2(50, 50) / 10,
+    'fruit_banana_special': Vector2(50, 50) / 10,
   };
   SpecialFruit({required super.position})
       : super(currentState: SpecialFruitState.only);

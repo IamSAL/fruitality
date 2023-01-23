@@ -10,13 +10,14 @@ enum CommonFruitState { only }
 
 class CommonFruit extends Fruit<CommonFruitState> {
   final Map<String, Vector2> spriteOptions = {
-    'fruit_apple': Vector2(50, 50),
-    'fruit_orange': Vector2(50, 50),
-    'fruit_strawberry': Vector2(50, 50),
-    'fruit_grape': Vector2(50, 50),
+    'fruit_apple': Vector2(50, 50) / 10,
+    'fruit_orange': Vector2(50, 50) / 10,
+    'fruit_strawberry': Vector2(50, 50) / 10,
+    'fruit_grape': Vector2(50, 50) / 10,
   };
 
-  CommonFruit({required super.position}) : super(currentState: CommonFruitState.only);
+  CommonFruit({required super.position})
+      : super(currentState: CommonFruitState.only);
 
   @override
   Future<void> onLoad() async {
@@ -25,7 +26,9 @@ class CommonFruit extends Fruit<CommonFruitState> {
 
     String randSprite = spriteOptions.keys.elementAt(randSpriteIndex);
 
-    final sprites = {CommonFruitState.only: await gameRef.loadSprite('game/$randSprite.png')};
+    final sprites = {
+      CommonFruitState.only: await gameRef.loadSprite('game/$randSprite.png')
+    };
 
     currentState = CommonFruitState.only;
 

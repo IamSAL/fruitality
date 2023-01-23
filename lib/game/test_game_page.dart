@@ -8,6 +8,12 @@ class TestGamePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+            image: AssetImage("assets/images/outside_map_bg_lg.png"),
+            fit: BoxFit.cover,
+            repeat: ImageRepeat.repeatX),
+      ),
       child: GameWidget(
         game: TestGame(),
       ),

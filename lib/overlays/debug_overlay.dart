@@ -1,4 +1,3 @@
-
 import 'package:flame_forge2d/flame_forge2d.dart' hide Transform;
 import 'package:flutter/material.dart';
 
@@ -75,11 +74,18 @@ class DebugOverlay extends StatelessWidget {
                               )),
                           IconButton(
                               onPressed: () {
-                                game.player.body.linearVelocity =
-                                    Vector2.all(0);
+                                game.camera.zoom = 100;
                               },
                               icon: const Icon(
-                                Icons.stop_circle,
+                                Icons.fullscreen,
+                                color: Colors.white,
+                              )),
+                          IconButton(
+                              onPressed: () {
+                                game.camera.zoom = 1;
+                              },
+                              icon: const Icon(
+                                Icons.fullscreen_exit,
                                 color: Colors.white,
                               )),
                           IconButton(
