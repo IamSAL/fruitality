@@ -18,9 +18,4 @@ class PlayerContainer extends SpriteComponent with HasGameRef<FruitaLityGame> {
     // add(playerArrow);
   }
 
-  @override
-  void update(double dt) {
-    // TODO: implement update
-    super.update(dt);
-  }
 }

@@ -1,7 +1,6 @@
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:fruitality/game/main_fruitality_page.dart';
-import 'package:fruitality/game/test_game_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

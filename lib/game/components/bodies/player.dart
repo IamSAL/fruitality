@@ -22,6 +22,7 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
   Character character;
   Direction direction = Direction.none;
   late Body groundBody;
+  double initialDistance = 0;
   double jumpSpeed = 7000;
   MouseJoint? mouseJoint;
   PlayerContainer playerContainer = PlayerContainer();
@@ -76,6 +77,14 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
     } else {
       playerContainer.opacity = 1;
     }
+
+    double newDistance = sqrt((targetPosition.x - body.position.x) * (targetPosition.x - body.position.x) +
+        (targetPosition.y - body.position.y) * (targetPosition.y - body.position.y));
+
+    if (newDistance < 1 && mouseJoint != null) {
+      game.world.destroyJoint(mouseJoint!);
+      mouseJoint = null;
+    }
   }
 
   setJumpSpeed(double jumpSpeed) {
@@ -88,7 +97,15 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
 
   void moveTo(Vector2 position) {
     if (!game.gameManager.isPlaying) return;
+    if (mouseJoint != null) {
+      game.world.destroyJoint(mouseJoint!);
+      mouseJoint = null;
+      body.linearVelocity = Vector2.zero();
 
+      // double currentAngle = body.angle;
+      // double newAngle = currentAngle + pi;
+      // body.setTransform(body.position, newAngle);
+    }
     final mouseJointDef = MouseJointDef()
       ..maxForce = 10 * body.mass * 0.05
       ..dampingRatio = 0
@@ -100,8 +117,12 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
 
     mouseJoint ??= MouseJoint(mouseJointDef);
     game.world.createJoint(mouseJoint!);
-    targetPosition = position;
+    Vector2 furthestPoint = getFurthestPoint(position, body.position);
+    //Vector2 furthestPoint = position;
+    mouseJoint?.setTarget(furthestPoint);
+    targetPosition = furthestPoint;
 
-    mouseJoint?.setTarget(position);
+    initialDistance = sqrt((targetPosition.x - body.position.x) * (targetPosition.x - body.position.x) +
+        (targetPosition.y - body.position.y) * (targetPosition.y - body.position.y));
   }
 }

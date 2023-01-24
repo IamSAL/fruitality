@@ -1,16 +1,10 @@
-import 'dart:math';
 
 import 'package:flame/components.dart';
 
 import 'package:flame_forge2d/flame_forge2d.dart';
-import 'package:fruitality/game/components/bodies/player_container.dart';
-import 'package:fruitality/game/fruitality_game.dart';
 import 'package:fruitality/game/testing/test_game.dart';
-import 'package:fruitality/helpers/num_utils.dart';
 
 import '../../../helpers/constants.dart';
-import '../../../helpers/direction.dart';
-import '../../../helpers/managers/game_manager.dart';
 
 class PlayerBodyTest extends BodyComponent<TestGame> {
   PlayerBodyTest({

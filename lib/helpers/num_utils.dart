@@ -5,6 +5,7 @@
 import 'dart:math';
 
 import 'package:flame/components.dart';
+import 'package:fruitality/helpers/constants.dart';
 
 class Range {
   final double start;
@@ -57,4 +58,26 @@ double angleBetweenVectors(Vector2 vec1, Vector2 vec2) {
   double angleDeg = angleRad * (180 / pi);
   //print("$vec1 $vec2 angle ${angleRad} : $angleDeg");
   return angleDeg;
+}
+
+Vector2 getFurthestPoint(
+  Vector2 touchPoint,
+  Vector2 playerPoint,
+) {
+  double playerX = playerPoint.x;
+  double playerY = playerPoint.y;
+  double touchX = touchPoint.x;
+  double touchY = touchPoint.y;
+  double worldX = Constants.WORLD_SIZE.x;
+  double worldY = Constants.WORLD_SIZE.y;
+  double distance = 10;
+
+  double angle = atan2(touchY - playerY, touchX - playerX);
+  double x = playerX + distance * cos(angle);
+  double y = playerY + distance * sin(angle);
+  x = min(worldX, max(x, 0));
+  y = min(worldY, max(y, 0));
+  print("Furthest point in the same direction: ($x, $y)");
+
+  return Vector2(x, y);
 }

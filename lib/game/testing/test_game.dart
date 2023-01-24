@@ -4,10 +4,8 @@ import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fruitality/game/components/bodies/player_test.dart';
 import 'package:fruitality/game/components/grid_image.dart';
-import 'package:fruitality/helpers/managers/game_manager.dart';
 
 import '../../helpers/constants.dart';
 
@@ -79,7 +77,7 @@ class TestGame extends Forge2DGame
 
   @override
   Color backgroundColor() {
-    return Color.fromARGB(255, 5, 53, 77).withOpacity(0.75);
+    return const Color.fromARGB(255, 5, 53, 77).withOpacity(0.75);
     //return super.backgroundColor();
   }
 }
@@ -121,7 +119,7 @@ final Paint blackPaint = BasicPalette.black.paint();
 
 // Helper component that paints a black background
 class _Background extends PositionComponent {
-  _Background({super.size});
+  _Background();
 
   @override
   void render(Canvas canvas) {
