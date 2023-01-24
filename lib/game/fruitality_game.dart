@@ -2,6 +2,7 @@
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 
 import 'package:flame/palette.dart';
@@ -22,14 +23,11 @@ import '../helpers/constants.dart';
 
 import '../helpers/managers/managers.dart';
 
+import '../helpers/num_utils.dart';
 import 'components/bodies/player.dart';
 
 class FruitaLityGame extends Forge2DGame
-    with
-        HasTappables,
-        KeyboardEvents,
-        MouseMovementDetector,
-        MultiTouchDragDetector {
+    with HasTappables, KeyboardEvents, MouseMovementDetector, MultiTouchDragDetector {
   FruitaLityGame() : super(zoom: kIsWeb ? 100 : 80, gravity: Vector2(0, 0));
 
   ActorManager actorManager = ActorManager();
@@ -38,6 +36,9 @@ class FruitaLityGame extends Forge2DGame
   ObjectManager objectManager = ObjectManager();
   final MovingParallax overlayParallax = MovingParallax();
   late PlayerBody player;
+  LowPassFilter _filterX = LowPassFilter(cutoffFrequency: 10);
+  LowPassFilter _filterY = LowPassFilter(cutoffFrequency: 10);
+  Vector2 pointerPosition = Vector2.zero();
   // int screenBufferSpace = 300;
 
   @override
@@ -58,25 +59,24 @@ class FruitaLityGame extends Forge2DGame
   @override
   bool onDragUpdate(int pointerId, DragUpdateInfo details) {
     super.onDragUpdate(pointerId, details);
-    actorManager.moveToPointerDirector(details.eventPosition);
+    actorManager.moveToPointerDirector(details.eventPosition.game);
 
     return true;
   }
 
   @override
-  KeyEventResult onKeyEvent(
-      RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+  KeyEventResult onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     final isKeyDown = event is RawKeyDownEvent;
     Direction? keyDirection;
 
     if (event.logicalKey == LogicalKeyboardKey.keyA) {
-      keyDirection = Direction.left;
+      actorManager.moveToPointerDirector(Vector2(player.position.x - 25, player.position.y));
     } else if (event.logicalKey == LogicalKeyboardKey.keyD) {
-      keyDirection = Direction.right;
+      actorManager.moveToPointerDirector(Vector2(player.position.x + 25, player.position.y));
     } else if (event.logicalKey == LogicalKeyboardKey.keyW) {
-      keyDirection = Direction.up;
+      actorManager.moveToPointerDirector(Vector2(player.position.x, player.position.y - 25));
     } else if (event.logicalKey == LogicalKeyboardKey.keyS) {
-      keyDirection = Direction.down;
+      actorManager.moveToPointerDirector(Vector2(player.position.x, player.position.y + 25));
     }
 
     if (isKeyDown && keyDirection != null) {
@@ -101,14 +101,17 @@ class FruitaLityGame extends Forge2DGame
 
   @override
   void onMouseMove(PointerHoverInfo info) {
-    actorManager.moveToPointerDirector(info.eventPosition);
+    //pointerPosition = Vector2(_filterX.apply(info.eventPosition.game.x), _filterY.apply(info.eventPosition.game.y));
+
+    //print("prev $pointerPosition");
+    //actorManager.moveToPointerDirector(pointerPosition);
     super.onMouseMove(info);
   }
 
   @override
   void onTapDown(int pointerId, TapDownInfo info) {
     super.onTapDown(pointerId, info);
-    actorManager.moveToPointerDirector(info.eventPosition);
+    actorManager.moveToPointerDirector(info.eventPosition.game);
     gameManager.pointerPosition.value = info.eventPosition.global;
   }
 
@@ -121,7 +124,7 @@ class FruitaLityGame extends Forge2DGame
   @override
   void update(double dt) {
     super.update(dt);
-
+    print("$pointerPosition");
     if (gameManager.isGameOver) {
       return;
     }
@@ -180,15 +183,13 @@ class FruitaLityGame extends Forge2DGame
 
     player.mounted.whenComplete(() {
       camera.followBodyComponent(player,
-          worldBounds: Rect.fromLTRB(
-              0, 0, Constants.WORLD_SIZE.x, Constants.WORLD_SIZE.y));
+          worldBounds: Rect.fromLTRB(0, 0, Constants.WORLD_SIZE.x, Constants.WORLD_SIZE.y));
     });
 
     objectManager.configure(levelManager.level, levelManager.difficulty);
 
     final paint = BasicPalette.red.paint()..style = PaintingStyle.stroke;
-    final circle = CircleComponent(
-        radius: 0.25, position: Constants.WORLD_SIZE / 2, paint: paint);
+    final circle = CircleComponent(radius: 0.25, position: Constants.WORLD_SIZE / 2, paint: paint);
     circle.removeFromParent();
 
     add(circle);

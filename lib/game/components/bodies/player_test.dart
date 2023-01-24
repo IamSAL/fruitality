@@ -1,4 +1,3 @@
-
 import 'package:flame/components.dart';
 
 import 'package:flame_forge2d/flame_forge2d.dart';
@@ -83,6 +82,6 @@ class PlayerBodyTest extends BodyComponent<TestGame> {
     targetPosition = position;
     mouseJoint?.setTarget(position);
 
-    print("moveing to $position");
+    //print("moveing to $position");
   }
 }

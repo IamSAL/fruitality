@@ -100,7 +100,7 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
     if (mouseJoint != null) {
       game.world.destroyJoint(mouseJoint!);
       mouseJoint = null;
-      body.linearVelocity = Vector2.zero();
+      // body.linearVelocity = body.linearVelocity / 2;
 
       // double currentAngle = body.angle;
       // double newAngle = currentAngle + pi;

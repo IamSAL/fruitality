@@ -12,14 +12,12 @@ enum activeActors { player, power, bot }
 class ActorManager extends Component with HasGameRef<FruitaLityGame> {
   ActorManager();
 
-  final fps = FpsTextComponent(scale: Vector2.all(0.5))
-    ..positionType = PositionType.viewport;
+  final fps = FpsTextComponent(scale: Vector2.all(0.5))..positionType = PositionType.viewport;
 
-  final totalBodies = TextComponent(scale: Vector2.all(0.5))
-    ..positionType = PositionType.viewport;
+  final totalBodies = TextComponent(scale: Vector2.all(0.5))..positionType = PositionType.viewport;
 
-  void moveToPointerDirector(EventPosition eventPosition) {
-    game.player.moveTo(eventPosition.game);
+  void moveToPointerDirector(Vector2 pointerPosition) {
+    game.player.moveTo(pointerPosition);
   }
 
   void hideJoyPad() {

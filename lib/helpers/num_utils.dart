@@ -77,7 +77,21 @@ Vector2 getFurthestPoint(
   double y = playerY + distance * sin(angle);
   x = min(worldX, max(x, 0));
   y = min(worldY, max(y, 0));
-  print("Furthest point in the same direction: ($x, $y)");
+  //print("Furthest point in the same direction: ($x, $y)");
 
   return Vector2(x, y);
+}
+
+class LowPassFilter {
+  late double _alpha;
+  double _previousValue = 0;
+
+  LowPassFilter({required double cutoffFrequency}) {
+    _alpha = 1 / (1 + cutoffFrequency);
+  }
+
+  double apply(double newValue) {
+    _previousValue = _alpha * newValue + (1 - _alpha) * _previousValue;
+    return _previousValue;
+  }
 }
