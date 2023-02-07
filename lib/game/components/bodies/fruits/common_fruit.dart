@@ -15,6 +15,8 @@ class CommonFruit extends Fruit<CommonFruitState> {
     'fruit_orange': Constants.INIT_OBJECT_SIZE,
     'fruit_strawberry': Constants.INIT_OBJECT_SIZE,
     'fruit_grape': Constants.INIT_OBJECT_SIZE,
+    'fruit_mango_special': Constants.INIT_OBJECT_SIZE,
+    'fruit_pineapple_special': Constants.INIT_OBJECT_SIZE,
   };
 
   CommonFruit({required super.position})

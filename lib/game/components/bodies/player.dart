@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:flutter/material.dart';
 import 'package:fruitality/game/components/bodies/player_container.dart';
 import 'package:fruitality/game/fruitality_game.dart';
 import 'package:fruitality/helpers/num_utils.dart';
@@ -11,14 +13,21 @@ import '../../../helpers/constants.dart';
 import '../../../helpers/direction.dart';
 import '../../../helpers/managers/game_manager.dart';
 
-class PlayerBody extends BodyComponent<FruitaLityGame> {
+enum PlayerSpriteState { normal, drunk, jumping, speeding, wasted }
+
+class PlayerBody extends BodyComponent<FruitaLityGame> with OpacityProvider {
+  PlayerSpriteState playerSpriteState = PlayerSpriteState.normal;
+  PlayerSpriteState lastState = PlayerSpriteState.normal;
+  DateTime? lastSpriteStateUpdateTime;
+
   PlayerBody({
     Vector2? position,
     required this.character,
     Vector2? size,
     double? jumpSpeed,
   }) : size = size ?? Constants.INIT_ACTOR_SIZE;
-
+  @override
+  double get opacity => 0.5;
   Character character;
   Direction direction = Direction.none;
   late Body groundBody;
@@ -29,7 +38,7 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
   Vector2 position = Constants.WORLD_SIZE / 2;
   late Vector2 size;
   Vector2 targetPosition = Constants.WORLD_SIZE / 2;
-
+  late SpriteComponent sprite;
   @override
   Body createBody() {
     final shape = CircleShape()..radius = size.x;
@@ -54,23 +63,35 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
     await super.onLoad();
     groundBody = game.world.createBody(BodyDef());
     priority = 2;
+
     renderBody = false;
-    final sprite = await gameRef.loadSprite("default_player.png");
-    // add(playerContainer);
-    // playerContainer.lookAt(targetPosition);
-    add(
-      SpriteComponent(
-        sprite: sprite,
-        size: size * 2.3,
-        anchor: Anchor.center,
-      ),
+    final spriteImg = await gameRef.loadSprite("default_player.png");
+    sprite = SpriteComponent(
+      sprite: spriteImg,
+      size: size * 2.3,
+      paint: Paint()..color = Colors.white.withOpacity(0.5),
+      anchor: Anchor.center,
     );
+    add(playerContainer);
+    playerContainer.lookAt(targetPosition);
+    add(sprite);
   }
 
   @override
   void update(double dt) {
     if (gameRef.gameManager.isIntro || gameRef.gameManager.isGameOver) return;
     super.update(dt);
+
+    if (playerSpriteState == PlayerSpriteState.normal) {
+      sprite.paint = Paint()..color = Colors.white.withOpacity(1);
+    } else if (playerSpriteState == PlayerSpriteState.drunk) {
+      sprite.paint = Paint()..color = Colors.white.withOpacity(0.5);
+      if (lastSpriteStateUpdateTime != null &&
+          lastSpriteStateUpdateTime!.difference(DateTime.now()).inSeconds > 5) {
+        setPlayerSpriteState(PlayerSpriteState.normal);
+      }
+    }
+
     playerContainer.angle += angleBetweenVectors(targetPosition, body.position);
     if (body.linearVelocity.isZero()) {
       playerContainer.opacity = 0;
@@ -78,8 +99,10 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
       playerContainer.opacity = 1;
     }
 
-    double newDistance = sqrt((targetPosition.x - body.position.x) * (targetPosition.x - body.position.x) +
-        (targetPosition.y - body.position.y) * (targetPosition.y - body.position.y));
+    double newDistance = sqrt((targetPosition.x - body.position.x) *
+            (targetPosition.x - body.position.x) +
+        (targetPosition.y - body.position.y) *
+            (targetPosition.y - body.position.y));
 
     if (newDistance < 1 && mouseJoint != null) {
       game.world.destroyJoint(mouseJoint!);
@@ -89,6 +112,23 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
 
   setJumpSpeed(double jumpSpeed) {
     jumpSpeed = jumpSpeed;
+  }
+
+  setPlayerSpriteState(PlayerSpriteState state) {
+    switch (state) {
+      case PlayerSpriteState.normal:
+        playerSpriteState = state;
+        lastSpriteStateUpdateTime = DateTime.now();
+        break;
+      case PlayerSpriteState.drunk:
+        playerSpriteState = state;
+        body.linearVelocity /= 2;
+        lastSpriteStateUpdateTime = DateTime.now();
+        break;
+      default:
+        playerSpriteState = state;
+        lastSpriteStateUpdateTime = DateTime.now();
+    }
   }
 
   void resetPosition() {
@@ -122,7 +162,9 @@ class PlayerBody extends BodyComponent<FruitaLityGame> {
     mouseJoint?.setTarget(furthestPoint);
     targetPosition = furthestPoint;
 
-    initialDistance = sqrt((targetPosition.x - body.position.x) * (targetPosition.x - body.position.x) +
-        (targetPosition.y - body.position.y) * (targetPosition.y - body.position.y));
+    initialDistance = sqrt((targetPosition.x - body.position.x) *
+            (targetPosition.x - body.position.x) +
+        (targetPosition.y - body.position.y) *
+            (targetPosition.y - body.position.y));
   }
 }

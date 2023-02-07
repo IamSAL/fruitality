@@ -11,7 +11,6 @@ import 'package:fruitality/game/components/bodies/bombs/green_bomb.dart';
 import 'package:fruitality/game/components/bodies/fruits/common_fruit.dart';
 import 'package:fruitality/game/components/bodies/fruits/fruit.dart';
 import 'package:fruitality/game/components/bodies/fruits/poison_fruit.dart';
-import 'package:fruitality/game/components/bodies/fruits/special_fruit.dart';
 import 'package:fruitality/game/fruitality_game.dart';
 import 'package:fruitality/helpers/constants.dart';
 
@@ -32,9 +31,12 @@ class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
   Set<BodyComponent> objectsMarkedForRemoval = {};
   final probGen = ProbabilityGenerator();
   final Map<String, bool> specialItems = {
-    'special_fruit': true, // level 1
-    'rocket': false, // level 4
-    'enemy': false, // level 5
+    'poison': true, // level 0
+    'bombs': false, // level 1
+    'boots': false, // level 2
+    'enemy': false, // level 3
+    'rockets': false, // level 4
+    'invincible': false, // level 5
   };
 
   final List<Bomb> _bombs = [];
@@ -46,7 +48,7 @@ class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
     super.onMount();
 
     //add some random fruits
-    _commonFruits.addAll(List.generate(250, (index) {
+    _commonFruits.addAll(List.generate(200, (index) {
       Fruit fruit =
           _semiRandomFruit(Vector2(_generateNextX(), _generateNextY()));
       add(fruit);
@@ -68,8 +70,8 @@ class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
     if (!gameRef.world.isLocked) {
       removeObjectsMarkedForRemoval();
     }
-    //max 5 items per second & max 500 items alive at once;
-    if (probGen.generateWithProbability(10) && _commonFruits.length < 400) {
+    //max 5 items per second & max 400 items alive at once;
+    if (probGen.generateWithProbability(5) && _commonFruits.length < 400) {
       var newPlatY = _generateNextY();
       var newPlatX = _generateNextX();
       final nextPlat = _semiRandomFruit(Vector2(newPlatX, newPlatY));
@@ -95,19 +97,19 @@ class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
   void enableLevelSpecialty(int level) {
     switch (level) {
       case 1:
-        enableSpecialty('spring');
+        enableSpecialty('bombs');
         break;
       case 2:
-        enableSpecialty('broken');
+        enableSpecialty('boots');
         break;
       case 3:
-        enableSpecialty('noogler');
+        enableSpecialty('enemy');
         break;
       case 4:
-        enableSpecialty('rocket');
+        enableSpecialty('rockets');
         break;
       case 5:
-        enableSpecialty('enemy');
+        enableSpecialty('invincible');
         break;
     }
   }
@@ -155,13 +157,7 @@ class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
   }
 
   Fruit _semiRandomFruit(Vector2 position) {
-    if (specialItems['special_fruit'] == true &&
-        probGen.generateWithProbability(15)) {
-      return SpecialFruit(position: position);
-    }
-
-    if (specialItems['special_fruit'] == true &&
-        probGen.generateWithProbability(5)) {
+    if (specialItems['poison'] == true && probGen.generateWithProbability(50)) {
       return PoisonFruit(position: position);
     }
 
@@ -169,10 +165,10 @@ class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
   }
 
   void _maybeAddBombs() {
-    if (specialItems['enemy'] != true) {
+    if (specialItems['bombs'] != true) {
       return;
     }
-    if (probGen.generateWithProbability(50)) {
+    if (probGen.generateWithProbability(30)) {
       var bomb = PoisonBomb(
         position: Vector2(_generateNextX(), _generateNextY()),
       );
@@ -210,14 +206,6 @@ class ObjectManager extends Component with HasGameRef<FruitaLityGame> {
   }
 
   void _cleanupPowerups() {
-    // final screenBottom = gameRef.player.position.y +
-    //     (gameRef.size.x / 2) +
-    //     gameRef.screenBufferSpace;
-    // while (_powerups.isNotEmpty && _powerups.first.position.y > screenBottom) {
-    //   if (_powerups.first.parent != null) {
-    //     remove(_powerups.first);
-    //   }
-    //   _powerups.removeAt(0);
-    // }
+    //remove boots/rockets when timeout
   }
 }

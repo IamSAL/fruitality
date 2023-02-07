@@ -47,6 +47,12 @@ class GameManager extends Component with HasGameRef<FruitaLityGame> {
     fruits.value++;
   }
 
+  void decreaseScore() {
+    if (fruits.value > 0) {
+      fruits.value--;
+    }
+  }
+
   void selectCharacter(Character selectedCharacter) {
     character = selectedCharacter;
   }
