@@ -18,7 +18,7 @@ enum PlayerSpriteState { normal, drunk, jumping, speeding, wasted }
 class PlayerBody extends BodyComponent<FruitaLityGame> with OpacityProvider {
   PlayerSpriteState playerSpriteState = PlayerSpriteState.normal;
   PlayerSpriteState lastState = PlayerSpriteState.normal;
-  DateTime? lastSpriteStateUpdateTime;
+  DateTime lastSpriteStateUpdateTime = DateTime.now();
 
   PlayerBody({
     Vector2? position,
@@ -69,7 +69,7 @@ class PlayerBody extends BodyComponent<FruitaLityGame> with OpacityProvider {
     sprite = SpriteComponent(
       sprite: spriteImg,
       size: size * 2.3,
-      paint: Paint()..color = Colors.white.withOpacity(0.5),
+      paint: Paint()..color = Colors.white.withOpacity(1),
       anchor: Anchor.center,
     );
     add(playerContainer);
@@ -82,12 +82,8 @@ class PlayerBody extends BodyComponent<FruitaLityGame> with OpacityProvider {
     if (gameRef.gameManager.isIntro || gameRef.gameManager.isGameOver) return;
     super.update(dt);
 
-    if (playerSpriteState == PlayerSpriteState.normal) {
-      sprite.paint = Paint()..color = Colors.white.withOpacity(1);
-    } else if (playerSpriteState == PlayerSpriteState.drunk) {
-      sprite.paint = Paint()..color = Colors.white.withOpacity(0.5);
-      if (lastSpriteStateUpdateTime != null &&
-          lastSpriteStateUpdateTime!.difference(DateTime.now()).inSeconds > 5) {
+    if (playerSpriteState == PlayerSpriteState.drunk) {
+      if (DateTime.now().difference(lastSpriteStateUpdateTime).inSeconds > 5) {
         setPlayerSpriteState(PlayerSpriteState.normal);
       }
     }
@@ -118,10 +114,12 @@ class PlayerBody extends BodyComponent<FruitaLityGame> with OpacityProvider {
     switch (state) {
       case PlayerSpriteState.normal:
         playerSpriteState = state;
+        sprite.paint = Paint()..color = Colors.white.withOpacity(1);
         lastSpriteStateUpdateTime = DateTime.now();
         break;
       case PlayerSpriteState.drunk:
         playerSpriteState = state;
+        sprite.paint = Paint()..color = Colors.white.withOpacity(0.5);
         body.linearVelocity /= 2;
         lastSpriteStateUpdateTime = DateTime.now();
         break;

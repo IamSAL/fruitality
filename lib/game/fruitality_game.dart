@@ -26,7 +26,11 @@ import '../helpers/num_utils.dart';
 import 'components/bodies/player.dart';
 
 class FruitaLityGame extends Forge2DGame
-    with HasTappables, KeyboardEvents, MouseMovementDetector, MultiTouchDragDetector {
+    with
+        HasTappables,
+        KeyboardEvents,
+        MouseMovementDetector,
+        MultiTouchDragDetector {
   FruitaLityGame() : super(zoom: kIsWeb ? 100 : 80, gravity: Vector2(0, 0));
 
   ActorManager actorManager = ActorManager();
@@ -64,18 +68,23 @@ class FruitaLityGame extends Forge2DGame
   }
 
   @override
-  KeyEventResult onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+  KeyEventResult onKeyEvent(
+      RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     final isKeyDown = event is RawKeyDownEvent;
     Direction? keyDirection;
 
     if (event.logicalKey == LogicalKeyboardKey.keyA) {
-      actorManager.moveToPointerDirector(Vector2(player.position.x - 25, player.position.y));
+      actorManager.moveToPointerDirector(
+          Vector2(player.position.x - 25, player.position.y));
     } else if (event.logicalKey == LogicalKeyboardKey.keyD) {
-      actorManager.moveToPointerDirector(Vector2(player.position.x + 25, player.position.y));
+      actorManager.moveToPointerDirector(
+          Vector2(player.position.x + 25, player.position.y));
     } else if (event.logicalKey == LogicalKeyboardKey.keyW) {
-      actorManager.moveToPointerDirector(Vector2(player.position.x, player.position.y - 25));
+      actorManager.moveToPointerDirector(
+          Vector2(player.position.x, player.position.y - 25));
     } else if (event.logicalKey == LogicalKeyboardKey.keyS) {
-      actorManager.moveToPointerDirector(Vector2(player.position.x, player.position.y + 25));
+      actorManager.moveToPointerDirector(
+          Vector2(player.position.x, player.position.y + 25));
     }
 
     if (isKeyDown && keyDirection != null) {
@@ -98,7 +107,6 @@ class FruitaLityGame extends Forge2DGame
     add(actorManager);
   }
 
-
   @override
   void onTapDown(int pointerId, TapDownInfo info) {
     super.onTapDown(pointerId, info);
@@ -115,7 +123,6 @@ class FruitaLityGame extends Forge2DGame
   @override
   void update(double dt) {
     super.update(dt);
-    print("$pointerPosition");
     if (gameManager.isGameOver) {
       return;
     }
@@ -174,13 +181,15 @@ class FruitaLityGame extends Forge2DGame
 
     player.mounted.whenComplete(() {
       camera.followBodyComponent(player,
-          worldBounds: Rect.fromLTRB(0, 0, Constants.WORLD_SIZE.x, Constants.WORLD_SIZE.y));
+          worldBounds: Rect.fromLTRB(
+              0, 0, Constants.WORLD_SIZE.x, Constants.WORLD_SIZE.y));
     });
 
     objectManager.configure(levelManager.level, levelManager.difficulty);
 
     final paint = BasicPalette.red.paint()..style = PaintingStyle.stroke;
-    final circle = CircleComponent(radius: 0.25, position: Constants.WORLD_SIZE / 2, paint: paint);
+    final circle = CircleComponent(
+        radius: 0.25, position: Constants.WORLD_SIZE / 2, paint: paint);
     circle.removeFromParent();
 
     add(circle);
