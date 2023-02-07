@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'package:flame/components.dart';
-import 'package:flame/input.dart';
 import 'package:fruitality/game/fruitality_game.dart';
 import 'package:fruitality/helpers/constants.dart';
 

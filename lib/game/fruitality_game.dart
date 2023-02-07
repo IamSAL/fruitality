@@ -2,7 +2,6 @@
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 
 import 'package:flame/palette.dart';
@@ -36,8 +35,8 @@ class FruitaLityGame extends Forge2DGame
   ObjectManager objectManager = ObjectManager();
   final MovingParallax overlayParallax = MovingParallax();
   late PlayerBody player;
-  LowPassFilter _filterX = LowPassFilter(cutoffFrequency: 10);
-  LowPassFilter _filterY = LowPassFilter(cutoffFrequency: 10);
+  final LowPassFilter _filterX = LowPassFilter(cutoffFrequency: 10);
+  final LowPassFilter _filterY = LowPassFilter(cutoffFrequency: 10);
   Vector2 pointerPosition = Vector2.zero();
   // int screenBufferSpace = 300;
 
@@ -99,14 +98,6 @@ class FruitaLityGame extends Forge2DGame
     add(actorManager);
   }
 
-  @override
-  void onMouseMove(PointerHoverInfo info) {
-    //pointerPosition = Vector2(_filterX.apply(info.eventPosition.game.x), _filterY.apply(info.eventPosition.game.y));
-
-    //print("prev $pointerPosition");
-    //actorManager.moveToPointerDirector(pointerPosition);
-    super.onMouseMove(info);
-  }
 
   @override
   void onTapDown(int pointerId, TapDownInfo info) {

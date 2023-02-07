@@ -53,7 +53,8 @@ double angleBetweenVectors(Vector2 vec1, Vector2 vec2) {
   var vector1 = [vec1.x, vec1.y];
   var vector2 = [vec2.x, vec2.y];
 
-  double angleRad = atan2(vector2[1], vector2[0]) - atan2(vector1[1], vector1[0]);
+  double angleRad =
+      atan2(vector2[1], vector2[0]) - atan2(vector1[1], vector1[0]);
 
   double angleDeg = angleRad * (180 / pi);
   //print("$vec1 $vec2 angle ${angleRad} : $angleDeg");
@@ -70,7 +71,7 @@ Vector2 getFurthestPoint(
   double touchY = touchPoint.y;
   double worldX = Constants.WORLD_SIZE.x;
   double worldY = Constants.WORLD_SIZE.y;
-  double distance = 10;
+  double distance = 2;
 
   double angle = atan2(touchY - playerY, touchX - playerX);
   double x = playerX + distance * cos(angle);
