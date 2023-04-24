@@ -2,9 +2,11 @@ import 'dart:math';
 
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
+import 'package:flame_bloc/flame_bloc.dart';
 
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
+import 'package:fruitality/bloc/minimap/minimap_bloc.dart';
 import 'package:fruitality/game/components/bodies/player_container.dart';
 import 'package:fruitality/game/fruitality_game.dart';
 import 'package:fruitality/helpers/num_utils.dart';
@@ -15,7 +17,8 @@ import '../../../helpers/managers/game_manager.dart';
 
 enum PlayerSpriteState { normal, drunk, jumping, speeding, wasted }
 
-class PlayerBody extends BodyComponent<FruitaLityGame> with OpacityProvider {
+class PlayerBody extends BodyComponent<FruitaLityGame>
+    with OpacityProvider, FlameBlocReader<MinimapBloc, MinimapState> {
   PlayerSpriteState playerSpriteState = PlayerSpriteState.normal;
   PlayerSpriteState lastState = PlayerSpriteState.normal;
   DateTime lastSpriteStateUpdateTime = DateTime.now();
@@ -159,7 +162,8 @@ class PlayerBody extends BodyComponent<FruitaLityGame> with OpacityProvider {
     //Vector2 furthestPoint = position;
     mouseJoint?.setTarget(furthestPoint);
     targetPosition = furthestPoint;
-
+    bloc.add(
+        MinimapEvent.update(MiniMapStateEntity(playerPosition: body.position)));
     initialDistance = sqrt((targetPosition.x - body.position.x) *
             (targetPosition.x - body.position.x) +
         (targetPosition.y - body.position.y) *

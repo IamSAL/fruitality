@@ -1,5 +1,7 @@
 import 'package:flame/game.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:fruitality/bloc/minimap/minimap_bloc.dart';
 import 'package:fruitality/game/fruitality_game.dart';
 import 'package:fruitality/overlays/debug_overlay.dart';
 
@@ -21,12 +23,14 @@ class _MainFruitalityPageState extends State<MainFruitalityPage> {
     return Scaffold(
       backgroundColor: Colors.blueGrey,
       body: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("assets/images/outside_map_bg_lg.png"),
-                fit: BoxFit.cover,
-                repeat: ImageRepeat.repeatX),
-          ),
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/images/outside_map_bg_lg.png"),
+              fit: BoxFit.cover,
+              repeat: ImageRepeat.repeatX),
+        ),
+        child: BlocProvider<MinimapBloc>(
+          create: (_) => MinimapBloc(),
           child: GameWidget(
             game: FruitaLityGame(),
             overlayBuilderMap: <String,
@@ -46,7 +50,9 @@ class _MainFruitalityPageState extends State<MainFruitalityPage> {
                     game: game,
                   ),
             },
-          )),
+          ),
+        ),
+      ),
     );
   }
 }
